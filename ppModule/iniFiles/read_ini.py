@@ -74,13 +74,13 @@ class Reader:
         self._file_path = file_path
 
     @staticmethod
-    def _is_valid_key(dict: dict, key: str) -> bool:
+    def _is_valid_key(dictionnary: dict, key: str) -> bool:
         """
         Check if the key is valid in the dictionary
         """
         if not isinstance(key, str):
             raise TypeError("key must be a string")
-        return key in dict
+        return key in dictionnary
 
 # =============================================================================
 class ParamBlockReader(Reader):
@@ -139,9 +139,9 @@ class ParamBlockReader(Reader):
     """
     def __init__(self, file_path: str):
         super().__init__(file_path)
-        self.block_info     = {}
-        self.snapshots_info = {}
-        self.current_block  = None
+        self.block_info    : dict   = {}
+        self.snapshots_info: dict   = {}
+        self.current_block          = None
 
     def read_block_info(self) -> dict:
         """
@@ -433,4 +433,4 @@ class FeosReader(Reader):
         """
         Check if a key is present in feos dictionnary
         """
-        self._is_valid_key(dict=self.feos, key=key)
+        self._is_valid_key(dictionnary=self.feos, key=key)

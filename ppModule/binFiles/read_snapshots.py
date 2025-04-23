@@ -75,14 +75,14 @@ class ReadSnapshots:
         self.info = info
         self.directory = repo
         self.snapshots_info = snapshots_info
-        self.info_plane = {}
-        self.info_point = {}
-        self.info_line  = {}
-        self.info_volume= {}
+        self.info_plane : dict= {}
+        self.info_point : dict= {}
+        self.info_line  : dict= {}
+        self.info_volume: dict= {}
         self.process_snapshots()
 
     # ======== Public methods ========
-    def process_snapshots(self) -> dict:
+    def process_snapshots(self) -> tuple:
         """
         Process snapshots information to get planes' information.
 
@@ -324,7 +324,7 @@ class ReadPlanes(ReadSnapshots):
     """
 
     @staticmethod
-    def read_2d(filename: str, n1: int, n2: int, nvar: int) -> dict:
+    def read_2d(filename: str, n1: int, n2: int, nvar: int):
         """
         Read 2D binary data in a block. Used to read planes, stats, etc.
 
@@ -370,7 +370,7 @@ class ReadPlanes(ReadSnapshots):
         f.close()
         return data
 
-    def read_planes(self) -> dict:
+    def read_planes(self):
         """
         Read planes from binary files.
 
@@ -382,7 +382,7 @@ class ReadPlanes(ReadSnapshots):
         dict
             Dictionary with the planes read from the binary files.
         """
-        planes = {}
+        planes: dict = {}
 
         for block in range(1, self.info["nbloc"] + 1):
             planes[block] = {}
@@ -446,7 +446,7 @@ class ReadLines(ReadSnapshots):
         Read lines from binary files for one block, is called by the read_line method.
     """
 
-    def read_lines(self) -> dict:
+    def read_lines(self):
         """
         Read lines from binary files.
 
@@ -458,7 +458,7 @@ class ReadLines(ReadSnapshots):
         dict
             Dictionary with the lines read from the binary files.
         """
-        lines = {}
+        lines: dict = {}
 
         for block in range(1, self.info["nbloc"] + 1):
             lines[block] = {}
@@ -493,13 +493,14 @@ class ReadLines(ReadSnapshots):
         logger.info("Lines read from binary files.")
         return lines
 
-    def read_line_block(self, filename: str, n1: int, nvar: int) -> dict:
+    def read_line_block(self, filename: str, n1: int, nvar: int):
         """
         Read lines from binary files for one block, is called by the read_line method.
         """
         try:
             f = open(filename, 'rb')
-            data, ind = {}, 0
+            data: dict = {}
+            ind = 0
         except FileNotFoundError:
             logger.error("File %s not found.", filename)
             return None
@@ -555,7 +556,7 @@ class ReadPoints(ReadSnapshots):
         dict
             Dictionary with the points read from the binary files.
         """
-        points = {}
+        points: dict = {}
         print("In read points")
         for block in range(1, self.info["nbloc"] + 1):
             points[block] = {}
@@ -586,7 +587,7 @@ class ReadPoints(ReadSnapshots):
         """
         try:
             f = open(filename, 'rb')
-            data = {}
+            data: dict = {}
             ind = 0
             logger.info("Reading file %s", filename)
         except FileNotFoundError:

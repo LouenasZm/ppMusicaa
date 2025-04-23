@@ -26,7 +26,7 @@ class ReadStats:
         self._directory = directory
         self._info = info
         self._case = case.lower()
-        self._stats = {}
+        self._stats: dict = {}
 
     def read_stats(self) -> dict:
         """
@@ -35,6 +35,8 @@ class ReadStats:
         # Return object to call:
         reader = self.stats_orienter()
         # Get stats:
+        if not callable(reader):
+            raise TypeError(f"The object returned by stats_orienter is not callable: {reader}")
         self._stats = reader(self._directory, info=self._info)
         return self._stats
 

@@ -35,7 +35,7 @@ class StatsReader:
             A dictionary containing the stats of the simulation
         """
         #
-        _stats = {}
+        _stats: dict = {}
         for i in range(1, info["nbloc"] + 1):
             _stats[i] = {}
 
@@ -116,7 +116,7 @@ class StatsReader:
             logger.warning("Info should be None to read channel flow stats, is used only to " \
                             "ensure conssitency in methods calling in ReadStats class")
         file_input  = directory+"/stats.dat"
-        stats = {'y_h':[],'rho':[],'u':[],'v':[],'w':[],'p':[],'T':[],\
+        stats: dict = {'y_h':[],'rho':[],'u':[],'v':[],'w':[],'p':[],'T':[],\
                  'e':[],'h':[],'c':[],'s':[],'Mt':[],'0.5*q':[],
                  'u2':[],'v2':[],'w2':[],'rho*dux':[],'rho*duy':[],
                  'rho*duz':[],'rho*dvx':[],'rho*dvy':[],'rho*dvz':[],
@@ -191,7 +191,7 @@ class StatsReader:
             A dictionary containing the stats of the simulation
         """
         #
-        _stats = {}
+        _stats: dict = {}
         for i in range(1, info["nbloc"] + 1):
             _stats[i] = {}
 
