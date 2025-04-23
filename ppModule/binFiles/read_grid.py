@@ -151,7 +151,7 @@ class ReadGrid():
                 x[nbl] = extract_grid(x_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
                 y[nbl] = extract_grid(y_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
                 if nz > 1:
-                    z[nbl] = z_ex[nbl][ngh:-ngh]
+                    z[nbl] = extract_grid(z_ex[nbl], ngh, "F", self.full_3d)
                 else:
                     z[nbl] = np.zeros(1)
             elif self.new_grid and self.full_3d:

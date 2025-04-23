@@ -29,7 +29,7 @@ class PreProcessPlanes:
         Methods to preprocess planes, it returns a dictionnary with the x1, x2 of each planes
         and the plane values to plot.
         """
-        planes = {}
+        planes: dict = {}
         #
         for block_id in range(1, self.info["nbloc"]+1):
             planes[block_id]    = {}
@@ -110,7 +110,7 @@ class PreProcessPlanes:
         return dict_value
 
     def _grid_z_plane(self, x1: np.ndarray, x2: np.ndarray,
-                    block_id: int, plane_id: int) -> np.ndarray | np.ndarray:
+                    block_id: int, plane_id: int) -> tuple:
         """
         Method to preprocess the grid in a y-z or a x-z plane to return appropriate coordinates 
         to plot planes. Takes into consideration the case where the grid is not uniform
@@ -125,7 +125,7 @@ class PreProcessPlanes:
         return (x1, x2)
 
     def _grid_xy(self, x: np.ndarray, y: np.ndarray,
-                 block_id: int, plane_id: int) -> np.ndarray | np.ndarray:
+                 block_id: int, plane_id: int) -> tuple:
         """
         Method to preprocess the grid in a x-y plane to return appropriate coordinates 
         to plot planes. Takes into consideration the case where the grid is not uniform
@@ -153,8 +153,9 @@ class PreProcessPlanes:
 # ===========
 class PreProcessLines:
     """
-    Class to preprocess lines to get coordinates and appropriate values of the line in space, takes into consideration the grid type
-    and the solver used (cartesian 2D curvliniear, full 3D curvlinear).
+    Class to preprocess lines to get coordinates and appropriate values of the line in space, 
+    takes into consideration the grid type and the solver used (cartesian 2D curvliniear, 
+    full 3D curvlinear).
     """
     def __init__(self, snapshot_info: dict,
                  info: dict, config: dict) -> None:
@@ -174,7 +175,7 @@ class PreProcessLines:
         """
         Method to pre-process lines before reading them
         """
-        lines = {}
+        lines: dict = {}
         #
         for block_id in range(1, self.info["nbloc"]+1):
             lines[block_id]    = {}
@@ -193,7 +194,7 @@ class PreProcessLines:
 
         return lines
 
-    def grid(self, line_id: int, block_id: int) -> np.ndarray | np.ndarray | np.ndarray:
+    def grid(self, line_id: int, block_id: int):
         """
         Method to preprocess grid to return appropriate coordinates to plot lines
         Takes into consideratin the solver aka the type of the mesh from Musicaa
@@ -283,7 +284,7 @@ class PreprocessPoints:
         Postprocess the points and returns a dictionnary with the x1, x2, x3 of each point
         and the points values for each variable and each snapshot in the point.
         """
-        points = {}
+        points: dict = {}
         #
         for block_id in range(1, self.info["nbloc"]+1):
             points[block_id]    = {}
@@ -299,7 +300,7 @@ class PreprocessPoints:
                             self.config["points"][block_id][point_id]
         return points
 
-    def grid(self, point_id: int, block_id: int) -> np.ndarray | np.ndarray | np.ndarray:
+    def grid(self, point_id: int, block_id: int):
         """
         Method to preprocess grid to return appropriate coordinates to plot points
         Takes into consideratin the solver aka the type of the mesh from Musicaa

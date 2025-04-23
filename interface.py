@@ -55,8 +55,7 @@ class PostProcessMusicaa:
     def __init__(self, config: dict) -> None:
         self.directory  = config["directory"]
         self.config     = config
-        self.snapshots_info = None
-        self.info = None
+        self._check_snapshot_info()
         self._grid()
 
     # # ========== Public methods:
@@ -217,7 +216,7 @@ class PostProcessMusicaa:
 
 
     # ========== Private methods:
-    def _grid(self) -> dict:
+    def _grid(self) -> None:
         """
         Read the grid from the binary files, the grid is saved in the config["dict"] dictionnary
 
@@ -234,14 +233,14 @@ class PostProcessMusicaa:
         self.config["grid"]["y"] = y
         self.config["grid"]["z"] = z
 
-    def _stats(self):
+    def _stats(self) -> None:
         """
         Read stats from binary files, the stats are saved in the config["stats"] dictionnary
         """
         reader = ReadStats(directory=self.directory, case=self.config["case"], info=self.info)
         self.config["stats"] = reader.read_stats()
 
-    def _planes(self):
+    def _planes(self) -> None:
         """
         Read the planes from the binary files, the planes are saved in the planes dictionnary
         """
@@ -252,7 +251,7 @@ class PostProcessMusicaa:
         self.config["planes"]       = plane_reader.read_planes()
         self.config["info plane"]   = plane_reader.info_plane
 
-    def _lines(self):
+    def _lines(self) -> None:
         """
         Read the lines from the binary files, the lines are saved in the lines dictionnary
         """
@@ -263,7 +262,7 @@ class PostProcessMusicaa:
         self.config["lines"]       = line_reader.read_lines()
         self.config["info line"]   = line_reader.info_line
 
-    def _points(self):
+    def _points(self) -> None:
         """
         Read the points from the binary files, the points are saved in the points dictionnary
         """
@@ -274,10 +273,9 @@ class PostProcessMusicaa:
         self.config["points"]       = point_reader.read_points()
         self.config["info point"]   = point_reader.info_point
 
-    def _check_snapshot_info(self):
+    def _check_snapshot_info(self) -> None:
         """
-        Check if the info.ini file is present in the directory, if not, raise an error
+        Read the param_blocks file to return the snapshot_info dicitonnary
         """
-        if self.snapshots_info is None:
-            block_reader    = ParamBlockReader(file_path=self.directory+"/param_blocks.ini")
-            self.snapshots_info  = block_reader.read_snapshots()
+        block_reader    = ParamBlockReader(file_path=self.directory+"/param_blocks.ini")
+        self.snapshots_info  = block_reader.read_snapshots()
