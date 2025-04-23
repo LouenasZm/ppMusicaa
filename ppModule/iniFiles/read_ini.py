@@ -141,7 +141,7 @@ class ParamBlockReader(Reader):
         super().__init__(file_path)
         self.block_info    : dict   = {}
         self.snapshots_info: dict   = {}
-        self.current_block          = None
+        self.current_block          = 0
 
     def read_block_info(self) -> dict:
         """
@@ -313,7 +313,7 @@ class InfoReader(Reader):
         Returns:
             dict: Data read from the ini file.
         """
-        data = {}
+        data: dict = {}
         with open(self.file_path, 'r', encoding="utf-8") as file:
             lines = file.readlines()
 
@@ -327,7 +327,7 @@ class InfoReader(Reader):
 
             # Blocks line:
             data["nbloc"] = int(data["nbloc"])
-            for i in range(1, 1+data["nbloc"]):
+            for i in range(1, 1+int(data["nbloc"])):
                 block_line  = lines[i].strip().split("=")
                 values      = block_line[1].strip().split()
                 block_id    = f"block {i}"

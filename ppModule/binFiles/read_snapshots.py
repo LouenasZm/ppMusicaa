@@ -346,7 +346,8 @@ class ReadPlanes(ReadSnapshots):
         """
         try:
             f = open(filename, 'rb')
-            data, ind = {}, 0
+            data: dict = {}
+            ind = 0
         except FileNotFoundError:
             logger.error("File %s not found.", filename)
             return None
@@ -544,7 +545,7 @@ class ReadPoints(ReadSnapshots):
         Dictionary containing information about the snapshots.
     """
 
-    def read_points(self) -> dict:
+    def read_points(self):
         """
         Read points from binary files.
 
@@ -581,7 +582,7 @@ class ReadPoints(ReadSnapshots):
         logger.info("Points read from binary files.")
         return points
 
-    def read_points_block(self, filename: str, nvar: int) -> dict:
+    def read_points_block(self, filename: str, nvar: int):
         """
         Read points from binary files for one block, is called by the read_points method.
         """
