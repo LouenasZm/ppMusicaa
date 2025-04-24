@@ -2,8 +2,8 @@
 name: Continuous Integration
 
 on:
-  push:
   pull_request:
+    branches: [main, master]
 
 permissions:
   contents: write
@@ -21,8 +21,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install mypy
-      - name: install dependencies
-        run: pip install -r requirements.txt
       - name: Lint with mypy
         run: |
           mypy ppModule --check-untyped-defs
@@ -36,6 +34,18 @@ jobs:
         with:
           python-version: 3.x
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          sudo apt-get install libglu1
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-cov
       - name: Run tests
-        run: pytest  # or your test command
+        run: |
+          set -o pipefail
+          pytest  -m pytest --cov=ppModule unitTests/ 2>&1 | tee coverage.txt
+      - name: Archive coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.txt
+          retention-days: 1
