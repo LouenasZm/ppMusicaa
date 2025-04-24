@@ -34,6 +34,12 @@ jobs:
         with:
           python-version: 3.x
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          sudo apt-get install libglu1
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-cov
       - name: Run tests
-        run: pytest  # or your test command
+        run: |
+          set -o pipefail
+          pytest  -m pytest --cov=ppModule unitTests/ 2>&1 | tee coverage.txt
