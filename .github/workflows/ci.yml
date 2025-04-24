@@ -42,7 +42,7 @@ jobs:
       - name: Run tests
         run: |
           set -o pipefail
-          pytest  -m pytest --cov=ppModule unitTests/ 2>&1 | tee coverage.txt
+          python  -m pytest --cov=ppModule unitTests/ 2>&1 | tee coverage.txt
       - name: Archive coverage results
         uses: actions/upload-artifact@v4
         with:
