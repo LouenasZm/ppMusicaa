@@ -343,7 +343,10 @@ class InfoReader(Reader):
                 keys = key_value_pairs[0].split()
                 values = key_value_pairs[1].split()
                 for key, value in zip(keys, values):
-                    data[key.strip()] = float(value.strip())
+                    try:
+                        data[key.strip()] = float(value.strip())
+                    except ValueError:
+                        data[key.strip()] = value.strip()
 
         return data
 
