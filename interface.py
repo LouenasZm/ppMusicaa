@@ -55,7 +55,7 @@ class PostProcessMusicaa:
     def __init__(self, config: dict) -> None:
         self.directory  = config["directory"]
         self.config     = config
-        self._check_snapshot_info()
+        self._read_snapshot_info()
         self._grid()
 
     # # ========== Public methods:
@@ -244,7 +244,6 @@ class PostProcessMusicaa:
         """
         Read the planes from the binary files, the planes are saved in the planes dictionnary
         """
-        self._check_snapshot_info()
         #
         plane_reader    = ReadPlanes(repo=self.directory, info=self.info,
                                      snapshots_info=self.snapshots_info)
@@ -255,7 +254,6 @@ class PostProcessMusicaa:
         """
         Read the lines from the binary files, the lines are saved in the lines dictionnary
         """
-        self._check_snapshot_info()
         #
         line_reader    = ReadLines(repo=self.directory, info=self.info,
                                      snapshots_info=self.snapshots_info)
@@ -266,14 +264,13 @@ class PostProcessMusicaa:
         """
         Read the points from the binary files, the points are saved in the points dictionnary
         """
-        self._check_snapshot_info()
         #
         point_reader    = ReadPoints(repo=self.directory, info=self.info,
                                      snapshots_info=self.snapshots_info)
         self.config["points"]       = point_reader.read_points()
         self.config["info point"]   = point_reader.info_point
 
-    def _check_snapshot_info(self) -> None:
+    def _read_snapshot_info(self) -> None:
         """
         Read the param_blocks file to return the snapshot_info dicitonnary
         """

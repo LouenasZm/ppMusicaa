@@ -110,6 +110,19 @@ class Compute2DCurv:
         return self.stats
     #
     #
+    def compute_cf(self) -> dict:
+        """
+        Computes skin friction coefficient at each mesh point for multiblock grid.
+        """
+        nwall_normal = self.grid["nwall_normal"]
+        #
+        for block_id in range(1, self.info["nbloc"]+1):
+           
+
+        logger.info("Skin friction coefficient computed for all blocks.")
+        return self.stats
+    #
+    #
     def compute_theta(self) -> dict:
         """
         Computes momentum thickness at each mesh point for multiblock grid.
@@ -270,3 +283,15 @@ class Compute2DCurv:
                 theta[i]   += (arg1 + arg2) / 2 * ((x[i, j + 1] - x[i, j]) ** 2 \
                                             +   (y[i, j + 1] - y[i, j]) ** 2) ** 0.5
         return theta
+
+    def _wall_normal_velocity(self, block: int, normal=np.ndarray):
+        """
+        Computes wall normal velocity at each mesh point for a given block.
+        """
+        tangent     = np.zeros((2, self.info[block]["nx"]))
+        tangent[0]  = normal[1]
+        tangent[1]  = -normal[0]
+        #
+        dudn = tangent[0,:] * 
+
+        return dudn
