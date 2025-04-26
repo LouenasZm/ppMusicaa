@@ -8,8 +8,8 @@
 
 import logging
 import numpy as np
-from scipy.interpolate      import interp1d
-from scipy.ndimage          import gaussian_filter1d
+from scipy.interpolate      import interp1d           # type: ignore
+from scipy.ndimage          import gaussian_filter1d  # type: ignore
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -39,8 +39,25 @@ class Compute2DCurv:
         Compute freestream velocity at each mesh for multiblock grid.
         """
         for block_id in range(1, self.info["nbloc"]+1):
-            self.stats[block_id]["ufst"], self.stats[block_id]["j99"] = \
-                                        self._freestream_velocity(block=block_id)
+            # Check if there is a wall:
+            if self.block_info[block_id]["Boundary conditions"][0][2] == "0" \
+                            and self.block_info[block_id]["Boundary conditions"][1][2] == "-":
+                # Get freestream velocity:
+                self.stats[block_id]["ufst"], self.stats[block_id]["j99"] = \
+                                            self._freestream_velocity(block=block_id)
+            # Check if there is a slip wall:
+            elif self.block_info[block_id]["Boundary conditions"][0][2] == "0" \
+                            and self.block_info[block_id]["Boundary conditions"][1][2] == "s":
+                logger.warning("Block %d has slip wall at jmin. " \
+                            "Freestream velocity set to reference velocity.", block_id)
+                self.stats[block_id]["ufst"]= self.info["Uref"]
+                self.stats[block_id]["j99"] = 1
+            # Block with no wall at all:
+            else:
+                logger.warning("Block %d has no wall at jmin. " \
+                            "Freestream velocity set to reference velocity.", block_id)
+                self.stats[block_id]["ufst"]= self.info["Uref"]
+                self.stats[block_id]["j99"] = 1
 
         logger.info("Freestream velocity computed for all blocks.")
         return self.stats
@@ -57,8 +74,13 @@ class Compute2DCurv:
 
             # Compute freestream density:
             rho_fst = np.zeros_like(u_fst)
-            for i in range(1, self.info[block_id]["nx"]+1):
-                rho_fst[i] = self.stats[block_id]["rho"][i, j_fst[i]]
+            # Check if there is a wall:
+            if self.block_info[block_id]["Boundary conditions"][0][2] == "0" \
+                            and self.block_info[block_id]["Boundary conditions"][1][2] == "-":
+                for i in range(1, self.info[block_id]["nx"]):
+                    rho_fst[i] = self.stats[block_id]["rho"][i, j_fst[i]]
+            else:
+                rho_fst  = self.info["Roref"]
 
             self.stats[block_id]["rho_fst"] = rho_fst
 
@@ -72,20 +94,14 @@ class Compute2DCurv:
         """
 
         for block_id in range(1, self.info["nbloc"]+1):
-            # Get freestream velocity:
-            u_fst = self.stats[block_id]["ufst"]
-            j_fst = self.stats[block_id]["j99"]
-
-            # Compute freestream density:
-            rho_fst = np.zeros_like(u_fst)
-            for i in range(1, self.info[block_id]["nx"]+1):
-                rho_fst[i] = self.stats[block_id]["rho"][i, j_fst[i]]
-
-            # Compute d99:
-            d99, j99    = self._d99_thickness(block=block_id,
-                                              normal_w=self.block_info[block_id]["normal_w"],
-                                              ue=u_fst,
-                                              u0=self.stats[block_id]["u"])
+            # Check if there is a wall:
+            if self.block_info[block_id]["Boundary conditions"][0][2] == "0" \
+                            and self.block_info[block_id]["Boundary conditions"][1][2] == "-":
+                # Compute d99:
+                d99, j99    = self._d99_thickness(block=block_id,
+                                                  normal_w=self.block_info[block_id]["normal_w"])
+            else:
+                d99, j99    = np.zeros(self.info[block_id]["nx"]), 1
 
             self.stats[block_id]["d99"] = d99
             self.stats[block_id]["j99"]  = j99
@@ -100,26 +116,18 @@ class Compute2DCurv:
         """
 
         for block_id in range(1, self.info["nbloc"]+1):
-            # Compute displacement thickness:
-            deltas = self._displacement_thickness(block=block_id)
+            # Check if there is a wall:
+            if self.block_info[block_id]["Boundary conditions"][0][2] == "0" \
+                            and self.block_info[block_id]["Boundary conditions"][1][2] == "-":
+                # Compute displacement thickness:
+                deltas = self._displacement_thickness(block=block_id)
+            else:
+                deltas = np.zeros(self.info[block_id]["nx"])
 
             # Store displacement thickness in stats:
             self.stats[block_id]["deltas"] = deltas
 
         logger.info("Displacement thickness computed for all blocks.")
-        return self.stats
-    #
-    #
-    def compute_cf(self) -> dict:
-        """
-        Computes skin friction coefficient at each mesh point for multiblock grid.
-        """
-        nwall_normal = self.grid["nwall_normal"]
-        #
-        for block_id in range(1, self.info["nbloc"]+1):
-           
-
-        logger.info("Skin friction coefficient computed for all blocks.")
         return self.stats
     #
     #
@@ -136,6 +144,28 @@ class Compute2DCurv:
 
         logger.info("Momentum thickness computed for all blocks.")
         return self.stats
+    #
+    #
+    def compute_tauw(self) -> dict:
+        """
+        Computes wall shear stress and skin friction coefficient for multiblock grid.
+        """
+        nwall_normal = self.grid["nwall_normal"]
+        #
+        for block_id in range(1, self.info["nbloc"]+1):
+            mu_w = self.stats[block_id]["mu"][:, 1]
+            dudn = self._wall_normal_velocity(block=block_id, normal=nwall_normal[block_id])
+            # Wall shear stress:
+            tauw = mu_w * dudn
+            cf   = tauw / (0.5 * self.stats[block_id]["rho_fst"] *
+                           self.stats[block_id]["ufst"] ** 2)
+            # Store wall shear stress and skin friction coefficient in stats:
+            self.stats[block_id]["tauw"] = tauw
+            self.stats[block_id]["cf"]   = cf
+
+
+        logger.info("Skin friction coefficient computed for all blocks.")
+        return self.stats
 
 
     # ======================== Private methods:
@@ -146,24 +176,23 @@ class Compute2DCurv:
         """
         vorticity = self.stats[block]["rho*dvx"]/self.stats[block]["rho"] \
                     - self.stats[block]["rho*duy"]/self.stats[block]["rho"]
+
         u_fst   = np.zeros_like(vorticity[:,0])
         j_fst   = np.zeros_like(vorticity[:,0])
-
-        for i in range(1, self.info[block]["nx"]+1):
+        for i in range(1, self.info[f"block {block}"]["nx"]):
             offset = 1
-            for j in range(1, self.info[block]["ny"]+1):
+            for j in range(1, self.info[f"block {block}"]["ny"]):
                 # Detect separation to start criterion higher:
-                if self.stats[block]["uu"] < 0.0:
+                if self.stats[block]["uu"][i,j] < 0.0:
                     offset = j + 2
             #
-            ind_ = np.where(-self.grid["y"][block]*vorticity[i, offset:] < c)[0]
-
+            ind_ = np.where(-self.grid["y"][block][i,offset:]*vorticity[i, offset:] < c)[0]
             if len(ind_) > 0:
                 ind_     = ind_[0]
-                u_fst[i]= self.stats[block]["u"][i, ind_]
+                u_fst[i]= self.stats[block]["uu"][i, ind_]
                 j_fst[i]= ind_
             else:
-                u_fst[i]= self.stats[block]["u"][i,1]
+                u_fst[i]= self.stats[block]["uu"][i,1]
 
         # Check for non continuity in the velocity field:
         return self._check_vel_discontinuity(u_fst, j_fst, block)
@@ -201,7 +230,7 @@ class Compute2DCurv:
             x_interp    = self.grid["x"][block][i1:i2, int(jfst[i2])]
 
             # Create interpolation function:
-            interpolator    = interp1d(np.concatenate([x1, x2]), 
+            interpolator    = interp1d(np.concatenate([x1, x2]),
                                        np.concatenate([u1, u2]), kind="cubic")
 
             # Interpolate velocity:
@@ -216,27 +245,30 @@ class Compute2DCurv:
 
         return ufst, jfst
     #
-    def _d99_thickness(self, block: int, normal_w: np.ndarray,
-                       ue: np.ndarray, u0: np.ndarray) -> np.ndarray:
+    def _d99_thickness(self, block: int, normal_w: np.ndarray) -> tuple:
         """
         Compute d99 boundary layer thickness for a single block
         """
-        d99 = np.zeros(self.info[block]["nx"])
-        jmax = np.zeros(self.info[block]["nx"])
-        for i in range(self.info[block]["nx"]):
+        d99 = np.zeros(self.info[f"block {block}"]["nx"])
+        jmax = np.zeros(self.info[f"block {block}"]["nx"])
+        for i in range(self.info[f"block {block}"]["nx"]):
             j = 0
             while self.stats[block]["uu"][i, j] < 0.99 * self.stats[block]["ufst"][i] \
-                    and j < self.info[block]["ny"] - 1:
+                    and j < self.info[f"block {block}"]["ny"] - 1:
                 j += 1
                 if normal_w is None:
                     raise ValueError("normal_w must be provided for curvilinear meshes.")
                 l_jm1 = ((self.grid["y"][block][i, j - 1] - self.grid["y"][block][i, 0]) ** 2 +
-                         (self.grid["x"][block][i, j - 1] 
+                         (self.grid["x"][block][i, j - 1]
                           - self.grid["x"][block][i, 0]) ** 2) ** 0.5
                 #
                 dl_j = ((self.grid["y"][block][i, j] - self.grid["y"][block][i, j - 1]) ** 2 +
                         (self.grid["x"][block][i, j] - self.grid["x"][block][i, j - 1]) ** 2) ** 0.5
-                l_j = dl_j * (0.99 * ue[i] - u0[i, j - 1]) / (u0[i, j] - u0[i, j - 1]) + l_jm1
+                #
+                l_j = dl_j * (0.99 * self.stats[block]["ufst"][i] -
+                                     self.stats[block]["uu"][i, j - 1]) \
+                        /   (self.stats[block]["uu"][i, j] - 
+                        self.stats[block]["uu"][i, j - 1]) + l_jm1
                 # Multiply by normal_w:
                 d99[i] = np.abs(l_j * normal_w[1, i])
             jmax[i] = j
@@ -247,13 +279,13 @@ class Compute2DCurv:
         """
         Computes displacement thickness at each mesh point for a given block.
         """
-        deltas = np.zeros(self.info[block]["nx"])
+        deltas = np.zeros(self.info[f"block {block}"]["nx"])
         x = self.grid["x"][block]
         y = self.grid["y"][block]
-        for i in range(self.info[block]["nx"]):
+        for i in range(self.info[f"block {block}"]["nx"]):
             for j in range(self.stats[block]["j99"]):
                 # Arg 1 and arg2 for trapezoidal rule:
-                arg1    = 1 - self.stats[block]["rho"][i,j]   *c[i, j] \
+                arg1    = 1 - self.stats[block]["rho"][i,j]   *self.stats[block]["uu"][i, j] \
                     / self.stats[block]["ufst"][i] / self.stats[block]["rho_fst"][i]
                 arg2    = 1 - self.stats[block]["rho"][i,j+1] *self.stats[block]["uu"][i, j + 1]\
                     / self.stats[block]["ufst"][i] / self.stats[block]["rho_fst"][i]
@@ -267,12 +299,12 @@ class Compute2DCurv:
         """
         Computes momentum thickness at each mesh point for a given block.
         """
-        theta = np.zeros(self.info[block]["nx"])
+        theta = np.zeros(self.info[f"block {block}"]["nx"])
 
         x = self.grid["x"][block]
         y = self.grid["y"][block]
 
-        for i in range(self.info[block]["nx"]):
+        for i in range(self.info[f"block {block}"]["nx"]):
             for j in range(min(y.shape[1] - 1, self.stats[block]["j99"][i] + 10)):
                 # Arg 1 and arg2 for trapezoidal rule:
                 arg1            = self.stats[block]["uu"][i, j]      / self.stats[block]["ufst"][i]\
@@ -288,10 +320,16 @@ class Compute2DCurv:
         """
         Computes wall normal velocity at each mesh point for a given block.
         """
-        tangent     = np.zeros((2, self.info[block]["nx"]))
+        tangent     = np.zeros((2, self.info[f"block {block}"]["nx"]))
         tangent[0]  = normal[1]
         tangent[1]  = -normal[0]
         #
-        dudn = tangent[0,:] * 
+        dudn = (    (-tangent[1,:] * self.stats[block]["rho*dux"] / self.stats[block]["rho"]
+                    + tangent[0,:] * self.stats[block]["rho*duy"] / self.stats[block]["rho"]
+                    )* tangent[0,:]
+                +   (-tangent[1,:] * self.stats[block]["rho*dvx"] / self.stats[block]["rho"]
+                    + tangent[0,:] * self.stats[block]["rho*dvy"] / self.stats[block]["rho"]
+                    )* tangent[1,:]
+                )
 
         return dudn
