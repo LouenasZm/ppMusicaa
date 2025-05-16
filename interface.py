@@ -12,7 +12,10 @@
     compute data from statistics (boundary layer values, skin friciton values ...). 
 
 """
+import os
 import logging
+import numpy as np
+
 # Import to read the grid, stats and *ini files
 from ppModule.binFiles.read_grid    import ReadGrid
 from ppModule.binFiles.read_stats   import ReadStats
@@ -218,14 +221,14 @@ class PostProcessMusicaa:
         points = pp_points.points()
         return points
 
-    def compute_value(self, value: str) -> dict:
+    def compute_qty(self, qty: str) -> dict:
         """
-        Compute value from the statistics, this method dynamically calls the appropriate
+        Compute quantity from the statistics, this method dynamically calls the appropriate
         compute method in the `compute` object based on the variable name.
 
         Args:
         -----
-            value: str
+            qty: str
                 The name of the variable to compute.
 
         Returns:
@@ -237,13 +240,18 @@ class PostProcessMusicaa:
                         "block id": value
                     }
         """
-        if value.lower() not in COMPUTED_VARIABLES:
-            logger.error("Value %s not computed yet", value)
+        # Check wall normal vector file if it has never been read, often needed for BL values:
+        if "nwall_normal" not in self.config["grid"]:
+            self._check_normal()
+            logger.debug("Wall normal vector computed correctly")
+        #
+        if qty.lower() not in COMPUTED_VARIABLES:
+            logger.error("Value %s not computed yet", qty)
             return {}
         # Dynamically construct the method name
-        method_name = f"compute_{value.lower()}"
+        method_name = f"compute_{qty.lower()}"
 
-            # Check if the method exists in the `compute` object
+        # Check if the method exists in the `compute` object
         if not hasattr(self.compute, method_name):
             logger.error("Method %s not implemented in the compute module", method_name)
             return {}
@@ -252,12 +260,12 @@ class PostProcessMusicaa:
         method = getattr(self.compute, method_name)
         try:
             self.config["stats"]    = method()
-            # Extract the requested variable from stats: 
-            result = {block_id: block_data.get(value.lower(), None) 
+            # Extract the requested variable from stats:
+            result = {block_id: block_data.get(qty.lower(), None)
                       for block_id, block_data in self.config["stats"].items()}
             return result
         except Exception as e:
-            logger.error("Error while computing %s: %s", value, str(e))
+            logger.error("Error while computing %s: %s", qty, str(e))
             return {}
 
 
@@ -333,9 +341,11 @@ class PostProcessMusicaa:
         Depending on the grid it calls Compute2DCurv or Compute3DCurv or ComputeCart. 
         N.B: only compute2DCurv is implemented at this point.
         """
+        # Curvilinear grids require wall normal vector to compute wall shear stress
+
         # Check if the grid is 2D curvilinear extruded or fully 3D curvilinear
         full_3d    = self.config.get("full_3d", False)
-        # Check if stats have been read already or not (logically they should not 
+        # Check if stats have been read already or not (logically they should not
         # have been read at this point)
         if "stats" not in self.config:
             self._stats()
@@ -350,4 +360,42 @@ class PostProcessMusicaa:
                                          )
         else:
             logger.error("Post-processing for 3D curvilinear grid not implemented yet")
-        
+
+    def _check_normal(self):
+        """
+        Check if there is a file with the wall normal vector, if not it will compute it
+        """
+        logger.debug("Checking for wall normal vector file")
+        # Check if the wall normal vector file exists
+        normal_file_path = os.path.join(self.config["directory"], "norm_surf.dat")
+        if not os.path.exists(normal_file_path):
+            logger.info("Wall normal vector file not found, computing it...")
+            self.config["grid"]["nwall_normal"] = self.compute.compute_wall_normal()
+        else:
+            logger.info("Wall normal vector file found.")
+            self.config["grid"]["nwall_normal"] = self._read_norm_surf()
+
+    def _read_norm_surf(self) -> dict:
+        """
+        Read the wall normal vector from the file norm_surf.dat
+        """
+        logger.debug("Reading wall normal vector from file")
+        # Create dict:
+        wall_normal : dict = {}
+        # Normal vector file path
+        normal_file_path = os.path.join(self.config["directory"], "norm_surf.dat")
+
+        data    = np.loadtxt(normal_file_path)
+        # Extract the wall normal vector
+        logger.debug("Shape of data from file: %s", data.shape)
+        normal  = data[:,2:5]
+        #
+        offset = 0
+        for block in range(1, self.info["nbloc"]+1):
+            # Get the number of points in the block
+            n_points = self.info[f"block {block}"]["nx"]
+            # Get the normal vector for the block
+            wall_normal = normal[offset:offset+n_points].transpose()
+            offset += n_points
+
+        return wall_normal
