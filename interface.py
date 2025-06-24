@@ -44,6 +44,22 @@ class PostProcessMusicaa:
         - config: dict
             The configuration dictionary containing the information about the grid,
             snapshots and statistics to be read.
+            It requires the following keys:
+            {
+                "directory": str
+                    The directory where the simulation data is stored.
+                "grid": dict
+                    The grid information, it has the following structure:
+                    {
+                        "ngh": int, (optional, tries to read from info.ini,
+                                    if not found default is 5)
+                        "endianess": str, (optional, default is "little")
+                        "full_3d": bool, (optional, default is False)
+                        "new_grid": bool, (optional, default is True)
+                    }
+                "case": str
+                    The name of the case from Musicaa, used to read the statistics.
+            }
         - snapshots_info: dict
             The information about the snapshots.
         - info: dict
@@ -52,9 +68,11 @@ class PostProcessMusicaa:
 
     Methods:
     --------
+        - return_stats: Return the statistics from the binary files.
         - planes: Preprocess the planes before plotting them.
         - lines: Preprocess the lines before plotting them.
         - points: Preprocess the points before plotting them.
+        - compute_qty: Compute a quantity from the statistics.
         - _grid: (private), Read the grid from the binary files.
         - _stats: (private), Read the statistics from the binary files.
         - _planes: (private), Read the planes from the binary files.
@@ -67,6 +85,24 @@ class PostProcessMusicaa:
         self._compute_orienter()
 
     # # ========== Public methods:
+    def return_stats(self) -> dict:
+        """
+        Return the statistics from the binary files, the stats are saved in the 
+        config["stats"] dictionnary.
+        The dictionary has the following structure:
+        {
+            "block_id": {
+                "var1": value
+                "var2": value
+                ... 
+            }
+        }
+        """
+        if "stats" not in self.config:
+            self._stats()
+        #
+        return self.config["stats"]
+
     def planes(self,
                fluctuation: bool = False) -> dict:
         """
