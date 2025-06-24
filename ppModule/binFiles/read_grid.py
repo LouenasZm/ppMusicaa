@@ -45,6 +45,7 @@ class ReadGrid():
         self.new_grid   = config.get("new_grid", True)
         self.info       = self._get_info()
 
+    # =============== Public methods:
     def _get_info(self):
         """
         Method to read the info.ini file
@@ -64,7 +65,66 @@ class ReadGrid():
                 self.ngh = 5
         return info_block
 
-    def read_one_block(self, filename, ngi, ngj, ngk):
+    def read_grid(self):
+        """
+        Method to read grid over whole domain and returns a grid without ghost points.
+
+        The method takes care of old grid as well for old simulations using Musicaa.
+
+        The grid is stored in a dictionnary containing: 
+            x, y, & z coordinates.
+        
+        Returns: 
+            tuple: Tuple containing grid data (x, y, z).
+        """
+        def extract_grid(data, ngh, is_curv, full_3d):
+            if is_curv == "F":
+                return data[ngh:-ngh]
+            if is_curv == "T" and not full_3d:
+                return data[ngh:-ngh, ngh:-ngh]
+
+            return data[ngh:-ngh, ngh:-ngh, ngh:-ngh]
+
+        ngh = self.ngh if isinstance(self.ngh, (float, int)) else 0
+        if self.new_grid:
+            logger.debug("Number of ghost points to be substracted form grid: %s", ngh)
+        else:
+            logger.debug("Old grid files without ghost points")
+
+        end_filename = f"_ngh{ngh}.bin" if self.new_grid else ".bin"
+        x, y, z = {}, {}, {}
+        x_ex, y_ex, z_ex = {}, {}, {}
+
+        for nbl in range(1, self.info["nbloc"] + 1):
+            file = f"grid_bl{nbl}{end_filename}"
+            nx = self.info[f"block {nbl}"]["nx"] + 2 * ngh
+            ny = self.info[f"block {nbl}"]["ny"] + 2 * ngh
+            nz = self.info[f"block {nbl}"]["nz"] + 2 * ngh \
+                if self.info[f"block {nbl}"]["nz"] > 1 else 1
+
+            x_ex[nbl], y_ex[nbl], z_ex[nbl] = self._read_one_block(file, nx, ny, nz)
+
+            if self.new_grid and not self.full_3d:
+                x[nbl] = extract_grid(x_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
+                y[nbl] = extract_grid(y_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
+                if nz > 1:
+                    z[nbl] = extract_grid(z_ex[nbl], ngh, "F", self.full_3d)
+                else:
+                    z[nbl] = np.zeros(1)
+            elif self.new_grid and self.full_3d:
+                x[nbl] = extract_grid(x_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
+                y[nbl] = extract_grid(y_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
+                z[nbl] = extract_grid(z_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
+            else:
+                x[nbl], y[nbl], z[nbl] = self._read_old_grid_block(filename=file)
+        logger.info("Done reading grid from binary files")
+        return x, y, z
+
+    # ============== Private methods:
+    # =========
+    # Read grid
+    # =========
+    def _read_one_block(self, filename, ngi, ngj, ngk):
         """
         Reads the grid from one block given the filename and other parameters.
 
@@ -108,61 +168,63 @@ class ReadGrid():
             raise SystemExit(f"An error occurred while reading the file {filename}: {e}") from e
         return x, y, z
 
-    def read_grid(self):
+    def _read_old_grid_block(self,
+                             filename):
+        """Reads the grid from one block given the filename and other parameters.
+
+        Args:
+            filename (str): Name of the binary file containing the grid data.
+            verbose (bool, optional): Whether to print verbose output. Defaults to False.
+            is_sw_rv (bool, optional): TBD. Defaults to False.
+
+        Returns:
+            tuple: Tuple containing grid data.
         """
-        Method to read grid over whole domain and returns a grid without ghost points.
+        # Reading of the grid
+        # -------------------
 
-        The method takes care of old grid as well for old simulations using Musicaa.
+        sens = '<' if self.endianess == "little" else '>'
 
-        The grid is stored in a dictionnary containing: 
-            x, y, & z coordinates.
-        
-        Returns: 
-            tuple: Tuple containing grid data (x, y, z).
-        """
-        def extract_grid(data, ngh, is_curv, full_3d):
-            if is_curv == "F":
-                return data[ngh:-ngh]
-            if is_curv == "T" and not full_3d:
-                return data[ngh:-ngh, ngh:-ngh]
+        try:
+            f = open(self.directory+"/"+filename, "r")
+        except FileNotFoundError as exc:
+            raise SystemExit(f"File {filename} not found...") from exc
 
-            return data[ngh:-ngh, ngh:-ngh, ngh:-ngh]
-
-        ngh = self.ngh if isinstance(self.ngh, (float, int)) else 0
-        if self.new_grid:
-            logger.debug("Number of ghost points to be substracted form grid: %s", ngh)
+        arg = np.fromfile(f, dtype=(sens+'i4'), count=1)
+        nx  = np.fromfile(f, dtype=(sens+'i4'), count=1)[0]
+        #===============================================================================
+        arg = np.fromfile(f, dtype=(sens+'i8'), count=1)
+        ny  = np.fromfile(f, dtype=(sens+'i4'), count=1)[0]
+        #===============================================================================
+        arg = np.fromfile(f, dtype=(sens+'i8'), count=1)
+        nz  = np.fromfile(f, dtype=(sens+'i4'), count=1)[0]
+        if self.info["is_curv"] == "T":
+            x = np.zeros((nx, ny),dtype='float',order='F')
+            for j in range(ny):
+                x[:,j] = np.fromfile(f, dtype=(sens+'f8'), count=nx)
+            #===============================================================================
+            arg = np.fromfile(f, dtype=(sens+'i8'), count=1)
+            y = np.zeros((nx, ny),dtype='float',order='F')
+            for j in range(ny):
+                y[:,j] = np.fromfile(f, dtype=(sens+'f8'), count=nx)
+            #===============================================================================
+            if nz>1:
+                arg = np.fromfile(f, dtype=(sens+'i8'), count=1)
+                z = np.fromfile(f, dtype=(sens+'f8'), count=nz)
         else:
-            logger.debug("Old grid files without ghost points")
-
-        end_filename = f"_ngh{ngh}.bin" if self.new_grid else ".bin"
-        x, y, z = {}, {}, {}
-        x_ex, y_ex, z_ex = {}, {}, {}
-
-        for nbl in range(1, self.info["nbloc"] + 1):
-            file = f"grid_bl{nbl}{end_filename}"
-            nx = self.info[f"block {nbl}"]["nx"] + 2 * ngh
-            ny = self.info[f"block {nbl}"]["ny"] + 2 * ngh
-            nz = self.info[f"block {nbl}"]["nz"] + 2 * ngh \
-                if self.info[f"block {nbl}"]["nz"] > 1 else 1
-
-            x_ex[nbl], y_ex[nbl], z_ex[nbl] = self.read_one_block(file, nx, ny, nz)
-
-            if self.new_grid and not self.full_3d:
-                x[nbl] = extract_grid(x_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
-                y[nbl] = extract_grid(y_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
-                if nz > 1:
-                    z[nbl] = extract_grid(z_ex[nbl], ngh, "F", self.full_3d)
-                else:
-                    z[nbl] = np.zeros(1)
-            elif self.new_grid and self.full_3d:
-                x[nbl] = extract_grid(x_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
-                y[nbl] = extract_grid(y_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
-                z[nbl] = extract_grid(z_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
-            else:
-                x[nbl], y[nbl], z[nbl] = x_ex[nbl], y_ex[nbl], z_ex[nbl]
-        logger.info("Done reading grid from binary files")
+            x = np.fromfile(f, dtype=(sens+'f8'), count=nx)
+            #===============================================================================
+            arg = np.fromfile(f, dtype=(sens+'i8'), count=1)
+            y = np.fromfile(f, dtype=(sens+'f8'), count=ny)
+            #===============================================================================
+            if nz > 1:
+                arg = np.fromfile(f, dtype=(sens+'i8'), count=1)
+                z = np.fromfile(f, dtype=(sens+'f8'), count=nz)
+                #===============================================================================
+        f.close()
+        if nz<=1:
+            return x, y
         return x, y, z
-
 
     # ============
     # Check if the directory exists:
