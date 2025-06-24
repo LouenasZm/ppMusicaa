@@ -196,6 +196,14 @@ class Compute2DCurv:
         """
         Computes wall shear stress and skin friction coefficient for multiblock grid.
         """
+        # Check if freestream velocity is already computed:
+        if not self._in_stats("ufst"):
+            self.compute_ufst()
+        
+        # Check if freestream density is already computed:
+        if not self._in_stats("rho_fst"):
+            self.compute_rhofst()
+        # Check if wall normal vector is already computed:
         nwall_normal = self.grid["nwall_normal"]
         #
         for block_id in range(1, self.info["nbloc"]+1):
