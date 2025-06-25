@@ -63,7 +63,7 @@ class StatsReader:
         # Reading of stats2_bl.bin
         for i in range(1, info["nbloc"] + 1):
             nx = info[f"block {i}"]["nx"]
-            ny = info[f"block {i}"]["nx"]
+            ny = info[f"block {i}"]["ny"]
             file_stats2 = directory + '/stats2_bl' + str(i) + '.bin'
             plane = ReadPlanes.read_2d(filename=file_stats2, n1=nx, n2=ny, nvar=144)
 
