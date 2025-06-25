@@ -424,14 +424,14 @@ class PostProcessMusicaa:
         data    = np.loadtxt(normal_file_path)
         # Extract the wall normal vector
         logger.debug("Shape of data from file: %s", data.shape)
-        normal  = data[:,2:5]
+        normal  = data[:,3]
         #
         offset = 0
         for block in range(1, self.info["nbloc"]+1):
             # Get the number of points in the block
             n_points = self.info[f"block {block}"]["nx"]
             # Get the normal vector for the block
-            wall_normal = normal[offset:offset+n_points].transpose()
+            wall_normal[block] = normal[offset:offset+n_points].transpose()
             offset += n_points
 
         return wall_normal
