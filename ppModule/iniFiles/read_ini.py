@@ -161,6 +161,10 @@ class ParamBlockReader(Reader):
 
         for i, line in enumerate(lines):
             line = line.strip()
+            # Check if the line starts with "nbloc" to get the number of blocks
+            if line.startswith('! nbloc'):
+                self.block_info['nbloc'] = int(lines[i + 1].strip())
+            #
             if line.startswith('! Block #'):
                 self.current_block = int(line.split('#')[1].strip())
                 self.block_info[self.current_block] = {
