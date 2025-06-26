@@ -313,7 +313,10 @@ class PostProcessMusicaa:
         Returns:
             dict: The grid is saved in the config["grid"] dictionnary
         """
-        reader  = ReadGrid(directory=self.config["directory"], config=self.config["grid"])
+        #
+        config_grid = self.config.get("grid", {})
+        #
+        reader  = ReadGrid(directory=self.config["directory"], config=config_grid)
         # Get info file
 
         self.info = reader.info
