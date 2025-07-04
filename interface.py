@@ -308,20 +308,21 @@ class PostProcessMusicaa:
     # ========== Private methods:
     def _grid(self) -> None:
         """
-        Read the grid from the binary files, the grid is saved in the config["dict"] dictionnary
+        Read the grid from the binary files, the grid is saved in the config["grid"] dictionary
 
         Returns:
-            dict: The grid is saved in the config["grid"] dictionnary
+            dict: The grid is saved in the config["grid"] dictionary
         """
-        #
-        config_grid = self.config.get("grid", {})
-        #
-        reader  = ReadGrid(directory=self.config["directory"], config=config_grid)
-        # Get info file
+        # Check if "grid" key exists in self.config
+        if "grid" not in self.config:
+            self.config["grid"] = {}
 
+        config_grid = self.config.get("grid", {})
+        reader = ReadGrid(directory=self.config["directory"], config=config_grid)
+        # Get info file
         self.info = reader.info
         # Get grid
-        x,y,z   = reader.read_grid()
+        x, y, z = reader.read_grid()
         self.config["grid"]["x"] = x
         self.config["grid"]["y"] = y
         self.config["grid"]["z"] = z
