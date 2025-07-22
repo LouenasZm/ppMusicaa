@@ -47,23 +47,24 @@ class Compute2DCurv:
                                             self._freestream_velocity(block=block_id)
                 # Hotfix of a bug where U_fst at the inlet is 0.0:
                 if self.stats[block_id]["ufst"][0] == 0.0:
-                    logger.warning("Freestream velocity is zero for block %d in i= 0, "
+                    logger.debug("Freestream velocity is zero for block %d in i= 0, "
                                    "setting ufst to reference velocity.", block_id)
                     self.stats[block_id]["ufst"][0] = self.stats[block_id]["ufst"][1]
 
             # Check if there is a slip wall:
             elif self.block_info[block_id]["Boundary conditions"][0][2] == "0" \
                             and self.block_info[block_id]["Boundary conditions"][1][2] == "s":
-                logger.warning("Block %d has slip wall at jmin. " \
+                logger.debug("Block %d has slip wall at jmin. " \
                             "Freestream velocity set to reference velocity.", block_id)
-                self.stats[block_id]["ufst"]= self.info["Uref"]
-                self.stats[block_id]["j99"] = 1
+                self.stats[block_id]["ufst"]= self.info["Uref"] \
+                                            *np.ones(self.info[f"block {block_id}"]["nx"])
+                self.stats[block_id]["j99"] = np.ones(self.info[f"block {block_id}"]["nx"])
             # Block with no wall at all:
             else:
-                logger.warning("Block %d has no wall at jmin. " \
+                logger.debug("Block %d has no wall at jmin. " \
                             "Freestream velocity set to reference velocity.", block_id)
-                self.stats[block_id]["ufst"]= self.info["Uref"]
-                self.stats[block_id]["j99"] = 1
+                self.stats[block_id]["ufst"][:]= self.info["Uref"]
+                self.stats[block_id]["j99"][:] = 1
 
         logger.info("Freestream velocity computed for all blocks.")
         return self.stats
@@ -92,12 +93,13 @@ class Compute2DCurv:
                     rho_fst[i]  = self.stats[block_id]["rho"][i, index]
                 # Hotfix of bug for rho_fst at the inlet:
                 if rho_fst[0] == 0.0:
-                    logger.warning("Freestream density is zero for block %d in i= 0, "
+                    logger.debug("Freestream density is zero for block %d in i= 0, "
                                    "setting rho_fst to reference density.", block_id)
                     rho_fst[0] = rho_fst[2]
 
             else:
-                rho_fst  = self.info["Roref"]
+                for i in range(1, self.info[f"block {block_id}"]["nx"]):
+                    rho_fst[i]  = self.info["Roref"]
 
             self.stats[block_id]["rho_fst"] = rho_fst
 
@@ -121,9 +123,10 @@ class Compute2DCurv:
                             and self.block_info[block_id]["Boundary conditions"][1][2] == "-":
                 # Compute d99:
                 d99, j99    = self._d99_thickness(block=block_id,
-                                                  normal_w=wall_normal)
+                                                  normal_w=wall_normal[block_id])
             else:
-                d99, j99    = np.zeros(self.info[f"block {block_id}"]["nx"]), 1
+                d99, j99    = np.zeros(self.info[f"block {block_id}"]["nx"]),\
+                              np.ones(self.info[f"block {block_id}"]["nx"])
 
             self.stats[block_id]["d99"] = d99
             self.stats[block_id]["j99"]  = j99
@@ -171,15 +174,12 @@ class Compute2DCurv:
         # Check if freestream velocity is already computed:
         if not self._in_stats("ufst"):
             self.compute_ufst()
-
         # Check if d99 is already computed:
         if not self._in_stats("d99"):
             self.compute_d99()
-
         # Check if freestream density is already computed:
         if not self._in_stats("rho_fst"):
             self.compute_rhofst()
-
         # Compute theta:
         for block_id in range(1, self.info["nbloc"]+1):
             # Compute momentum thickness:
@@ -199,7 +199,7 @@ class Compute2DCurv:
         # Check if freestream velocity is already computed:
         if not self._in_stats("ufst"):
             self.compute_ufst()
-        
+
         # Check if freestream density is already computed:
         if not self._in_stats("rho_fst"):
             self.compute_rhofst()
@@ -227,6 +227,7 @@ class Compute2DCurv:
         Assumes the wall normal vector is constant at jmin and goes upwards.
         This method is called if the file "norm_surf.dat" is not found in the directory.
         """
+        print("In compute wall normal")
         wall_normal: dict = {}
         for block in range(1, self.info["nbloc"]+1):
             normal_x    = np.zeros(self.info[f"block {block}"]["nx"])
@@ -375,14 +376,15 @@ class Compute2DCurv:
         y = self.grid["y"][block]
         #
         for i in range(self.info[f"block {block}"]["nx"]):
+            # Loop through x:
             for j in range(min(y.shape[1] - 1, int(self.stats[block]["j99"][i]) + 10)):
                 # Arg 1 and arg2 for trapezoidal rule:
                 if self.stats[block]["ufst"][i] == 0.0:
-                    logger.warning("Freestream velocity is zero for block %d in i= %d, j= %d "
+                    logger.debug("Freestream velocity is zero for block %d in i= %d, j= %d "
                                    "setting theta to zero.", block,i, j)
                     return np.zeros(self.info[f"block {block}"]["nx"])
                 if self.stats[block]["rho_fst"][i] == 0.0:
-                    logger.warning("Freestream density is zero for block %d in i= %d, "
+                    logger.debug("Freestream density is zero for block %d in i= %d, "
                                    "setting theta to zero.", block,i)
 
                 arg1            = self.stats[block]["uu"][i, j]      / self.stats[block]["ufst"][i]\
