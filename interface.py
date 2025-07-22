@@ -435,7 +435,9 @@ class PostProcessMusicaa:
             # Get the number of points in the block
             n_points = self.info[f"block {block}"]["nx"]
             # Get the normal vector for the block
-            wall_normal[block] = normal[offset:offset+n_points].transpose()
+            y_norm              = normal[offset:offset+n_points]
+            x_norm              = np.sqrt(1 - y_norm**2)
+            wall_normal[block]  = np.array([x_norm, y_norm])
             offset += n_points
 
         return wall_normal

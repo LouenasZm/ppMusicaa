@@ -55,14 +55,17 @@ class ReadGrid():
         info_block  = reader.info
         # 
         if self.ngh == -1 and self.new_grid:
-            logger.warning("No number of ghost points provided, for a new grid. " \
+            logger.debug("No number of ghost points provided, for a new grid. " \
                            "Trying to read from info.ini")
             if reader.get_value(key="ngh") is not None:
                 self.ngh = int(reader.get_value(key="ngh"))
             else:
-                logger.warning("No number of ghost points provided in info.ini, " \
+                logger.debug("No number of ghost points provided in info.ini, " \
                                "using default value 5")
                 self.ngh = 5
+        if not self.new_grid:
+            logger.debug("Old grid files without ghost points")
+            self.ngh = 0
         return info_block
 
     def read_grid(self):
@@ -101,7 +104,6 @@ class ReadGrid():
             ny = self.info[f"block {nbl}"]["ny"] + 2 * ngh
             nz = self.info[f"block {nbl}"]["nz"] + 2 * ngh \
                 if self.info[f"block {nbl}"]["nz"] > 1 else 1
-
             x_ex[nbl], y_ex[nbl], z_ex[nbl] = self._read_one_block(file, nx, ny, nz)
 
             if self.new_grid and not self.full_3d:
@@ -116,7 +118,7 @@ class ReadGrid():
                 y[nbl] = extract_grid(y_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
                 z[nbl] = extract_grid(z_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
             else:
-                x[nbl], y[nbl], z[nbl] = self._read_old_grid_block(filename=file)
+                x[nbl], y[nbl], z[nbl] = self._read_old_grid_block(file, nx, ny, nz)
         logger.info("Done reading grid from binary files")
         return x, y, z
 
@@ -169,7 +171,7 @@ class ReadGrid():
         return x, y, z
 
     def _read_old_grid_block(self,
-                             filename):
+                             filename, nx, ny, nz):
         """Reads the grid from one block given the filename and other parameters.
 
         Args:
@@ -184,20 +186,19 @@ class ReadGrid():
         # -------------------
 
         sens = '<' if self.endianess == "little" else '>'
-
         try:
             f = open(self.directory+"/"+filename, "r")
         except FileNotFoundError as exc:
             raise SystemExit(f"File {filename} not found...") from exc
 
         arg = np.fromfile(f, dtype=(sens+'i4'), count=1)
-        nx  = np.fromfile(f, dtype=(sens+'i4'), count=1)[0]
+        nx_  = np.fromfile(f, dtype=(sens+'i4'), count=1)[0]
         #===============================================================================
         arg = np.fromfile(f, dtype=(sens+'i8'), count=1)
-        ny  = np.fromfile(f, dtype=(sens+'i4'), count=1)[0]
+        ny_  = np.fromfile(f, dtype=(sens+'i4'), count=1)[0]
         #===============================================================================
         arg = np.fromfile(f, dtype=(sens+'i8'), count=1)
-        nz  = np.fromfile(f, dtype=(sens+'i4'), count=1)[0]
+        nz_  = np.fromfile(f, dtype=(sens+'i4'), count=1)[0]
         if self.info["is_curv"] == "T":
             x = np.zeros((nx, ny),dtype='float',order='F')
             for j in range(ny):
@@ -211,6 +212,8 @@ class ReadGrid():
             if nz>1:
                 arg = np.fromfile(f, dtype=(sens+'i8'), count=1)
                 z = np.fromfile(f, dtype=(sens+'f8'), count=nz)
+            else:
+                z = np.zeros(1)
         else:
             x = np.fromfile(f, dtype=(sens+'f8'), count=nx)
             #===============================================================================
@@ -221,9 +224,9 @@ class ReadGrid():
                 arg = np.fromfile(f, dtype=(sens+'i8'), count=1)
                 z = np.fromfile(f, dtype=(sens+'f8'), count=nz)
                 #===============================================================================
+            else:
+                z = np.zeros(1)
         f.close()
-        if nz<=1:
-            return x, y
         return x, y, z
 
     # ============
