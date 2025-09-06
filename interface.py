@@ -1,16 +1,28 @@
 """
-    This module provides an interface for the user to interact with the post-processing module.
+Post-processing interface for Musicaa simulation data.
 
-    It includes methods to read grid, information about the simulations and snaphots.
-    The main class is PostProcessMusicaa, which handles the reading of the grid,
-    snapshots and statistics from the Musicaa simulation data.
-    The class is initialized with the directory of the simulation data and a configuration
-    dictionary. The configuration dictionary contains the information about the grid,
-    snapshots and statistics to be read. 
+This module provides the main interface class `PostProcessMusicaa` for 
+reading and processing Musicaa simulation output files including grids,
+snapshots, and statistics.
 
-    The class provides methods to preprocess snapshots before plotting them and methods to 
-    compute data from statistics (boundary layer values, skin friciton values ...). 
+The interface supports:
+- Reading grid data, snapshots (planes/lines/points), and statistics
+- Preprocessing data for visualization and analysis  
+- Computing derived boundary layer quantities
+- Both 2D curvilinear and 3D grid types
 
+Examples
+--------
+>>> from ppModule.interface import PostProcessMusicaa
+>>> config = {"directory": "/path/to/data", "case": "simulation"}
+>>> pp = PostProcessMusicaa(config)
+>>> stats = pp.return_stats()
+>>> planes = pp.planes()
+
+See Also
+--------
+For detailed configuration and usage examples, see the documentation 
+in the docs/ directory.
 """
 import os
 import logging
@@ -37,46 +49,46 @@ COMPUTED_VARIABLES = ["ufst", "rhofst", "d99", "delta", "theta", "tauw"]
 # ========================== Interface to the user ==========================
 class PostProcessMusicaa:
     """
-    Class used to handle the post-processing of the simulation data.
+    Interface for post-processing Musicaa simulation data.
 
-    Attributes:
-    -----------
-        - config: dict
-            The configuration dictionary containing the information about the grid,
-            snapshots and statistics to be read.
-            It requires the following keys:
-            {
-                "directory": str
-                    The directory where the simulation data is stored.
-                "grid": dict
-                    The grid information, it has the following structure:
-                    {
-                        "ngh": int, (optional, tries to read from info.ini,
-                                    if not found default is 5)
-                        "endianess": str, (optional, default is "little")
-                        "full_3d": bool, (optional, default is False)
-                        "new_grid": bool, (optional, default is True)
-                    }
-                "case": str
-                    The name of the case from Musicaa, used to read the statistics.
-            }
-        - snapshots_info: dict
-            The information about the snapshots.
-        - info: dict
-            The information about the simulation from info.ini. it has the following structure:
+    This class provides methods to read grid data, snapshots, and statistics
+    from Musicaa simulation output files. It supports preprocessing of planes,
+    lines, and points data for visualization and analysis.
 
+    Parameters
+    ----------
+    config : dict
+        Configuration dictionary containing simulation settings.
+        Must include 'directory' and 'case' keys. See user guide for complete
+        configuration structure and examples.
 
-    Methods:
+    Attributes
+    ----------
+    config : dict
+        The configuration dictionary passed during initialization.
+    snapshots_info : dict
+        Information about available snapshots read from param_blocks.ini.
+    info : dict
+        Simulation information read from info.ini file.
+    block_info : dict
+        Block information read from param_blocks.ini.
+    compute : object
+        Computation object (Compute2DCurv, Compute3DCurv, or ComputeCart).
+
+    Examples
     --------
-        - return_stats: Return the statistics from the binary files.
-        - planes: Preprocess the planes before plotting them.
-        - lines: Preprocess the lines before plotting them.
-        - points: Preprocess the points before plotting them.
-        - compute_qty: Compute a quantity from the statistics.
-        - _grid: (private), Read the grid from the binary files.
-        - _stats: (private), Read the statistics from the binary files.
-        - _planes: (private), Read the planes from the binary files.
-        - _info: (private), Read the information from the info.ini file.
+    >>> config = {
+    ...     "directory": "/path/to/simulation/data",
+    ...     "case": "boundary_layer_case",
+    ...     "grid": {"ngh": 5}
+    ... }
+    >>> pp = PostProcessMusicaa(config)
+    >>> stats = pp.return_stats()
+    >>> planes_data = pp.planes()
+
+    See Also
+    --------
+    For detailed configuration options and usage examples, see the user guide.
     """
     def __init__(self, config: dict) -> None:
         self.config     = config
@@ -87,16 +99,18 @@ class PostProcessMusicaa:
     # # ========== Public methods:
     def return_stats(self) -> dict:
         """
-        Return the statistics from the binary files, the stats are saved in the 
-        config["stats"] dictionnary.
-        The dictionary has the following structure:
-        {
-            "block_id": {
-                "var1": value
-                "var2": value
-                ... 
-            }
-        }
+        Return statistics from binary files.
+
+        Returns
+        -------
+        dict
+            Statistics dictionary with structure:
+            ``{"block_id": {"var1": value, "var2": value, ...}}``
+
+        Notes
+        -----
+        Statistics are automatically read and cached in config["stats"] 
+        if not already present.
         """
         if "stats" not in self.config:
             self._stats()
@@ -106,39 +120,29 @@ class PostProcessMusicaa:
     def planes(self,
                fluctuation: bool = False) -> dict:
         """
-        Preprocess planes before plotting them, this method returns the (x,y) coordinates of 
-        the planes and the data in the appropriate format.
+        Preprocess plane data for visualization.
 
-        Args:
+        Parameters
+        ----------
+        fluctuation : bool, optional
+            If True, return fluctuation fields (requires statistics).
+            If False, return instantaneous snapshots. Default is False.
+
+        Returns
+        -------
+        dict
+            Preprocessed plane data with coordinates and field values.
+            Structure: ``{"block_id": {"plane_id": {"x1": ..., "x2": ..., "fields": {...}}}}``
+
+        Notes
         -----
-            fluctuation: bool
-                If True, the fluctuation of the field is returned (this option requires the stats).
-                If False, the instantaneous snapshots of the data is returned.
+        Plane data is automatically read from binary files if not already cached.
+        For fluctuation=True, statistics must be available or will be computed.
 
-        Returns:
+        Examples
         --------
-            dict: The planes dictionnary with the x1, x2 of each planes
-                  and the plane values to plot. It has the following structure:
-            {
-            "block id": {
-                "plane id": {
-                    "x1": x1,
-                    "x2": x2,
-                    "fields": {
-                            "var1": {
-                                1: snapshot 1,
-                                2: snapshot 2,
-                                ...
-                            },
-                            "var2": {
-                                1: snapshot 1,
-                                2: snapshot 2,
-                                ...
-                            },
-                            ...
-                    }
-                }
-            }
+        >>> planes = pp.planes()  # Get instantaneous data
+        >>> fluct_planes = pp.planes(fluctuation=True)  # Get fluctuations
         """
         if "planes" not in self.config:
             self._planes()
@@ -155,42 +159,24 @@ class PostProcessMusicaa:
 
     def lines(self, fluctuation: bool = False) -> dict:
         """
-        Preprocess lines before plotting them, this method returns the (x,y) coordinates of 
-        the lines and the data in the appropriate format.
+        Preprocess line data for visualization.
 
-        Args:
-        ----
-            fluctuation: bool
-                If True, the fluctuation of the field is returned (this option requires the stats).
-                If False, the instantaneous snapshots of the data is returned.
+        Parameters
+        ----------
+        fluctuation : bool, optional
+            If True, return fluctuation fields (requires statistics).
+            If False, return instantaneous snapshots. Default is False.
 
-        Returns:
-        --------
-            dict: The lines dictionnary with the x1, x2 of each lines
-                  and the line values to plot. It has the following structure:
-            {
-            "block id": {
-                "line id": {
-                    "x1": x1,
-                    "x2": x2,
-                    "x3": x3,
-                    "fields": {
-                            "var1": {
-                                1: snapshot 1,
-                                2: snapshot 2,
-                                ...
-                            },
-                            "var2": {
-                                1: snapshot 1,
-                                2: snapshot 2,
-                                ...
-                            },
-                            ...
-                    }
-                    "dir": dir, which is the direction of the line (1,2,3) corresponds to
-                            x1 x2 x3 respectively, which is equivalent to x,y,z.
-                }
-            }
+        Returns
+        -------
+        dict
+            Preprocessed line data with coordinates, field values, and direction info.
+            Structure: ``{"block_id": {"line_id": {"x1": ..., "x2": ..., "x3": ..., "fields": {...}, "dir": int}}}``
+
+        Notes
+        -----
+        Line data is automatically read from binary files if not already cached.
+        The "dir" field indicates line direction: 1=x, 2=y, 3=z.
         """
         if "lines" not in self.config:
             self._lines()
@@ -209,39 +195,23 @@ class PostProcessMusicaa:
 
     def points(self, fluctuation: bool = False) -> dict:
         """
-        Preprocess points before plotting them, this method returns the (x,y,z) coordinates of
-        the points and the data in the appropriate format.
+        Preprocess point data for visualization.
 
-        Args:
-        ----
-            fluctuation: bool
-                If True, the fluctuation of the field is returned (this option requires the stats).
-                If False, the instantaneous snapshots of the data is returned.
-        Returns:
-        --------
-            dict: The points dictionnary with the x1, x2, x3 of each points
-                  and the point values to plot. It has the following structure:
-            {
-            "block id": {
-                "point id": {
-                    "x1": x1,
-                    "x2": x2,
-                    "x3": x3,
-                    "fields": {
-                            "var1": {
-                                1: snapshot 1,
-                                2: snapshot 2,
-                                ...
-                            },
-                            "var2": {
-                                1: snapshot 1,
-                                2: snapshot 2,
-                                ...
-                            },
-                            ...
-                    }
-                }
-            }
+        Parameters
+        ----------
+        fluctuation : bool, optional
+            If True, return fluctuation fields (requires statistics).
+            If False, return instantaneous snapshots. Default is False.
+
+        Returns
+        -------
+        dict
+            Preprocessed point data with coordinates and field values.
+            Structure: ``{"block_id": {"point_id": {"x1": ..., "x2": ..., "x3": ..., "fields": {...}}}}``
+
+        Notes
+        -----
+        Point data is automatically read from binary files if not already cached.
         """
         if "points" not in self.config:
             self._points()
@@ -259,22 +229,30 @@ class PostProcessMusicaa:
 
     def compute_qty(self, qty: str) -> dict:
         """
-        Compute quantity from the statistics, this method dynamically calls the appropriate
-        compute method in the `compute` object based on the variable name.
+        Compute derived quantities from statistics.
 
-        Args:
+        Parameters
+        ----------
+        qty : str
+            Name of the quantity to compute. Available quantities:
+            'ufst', 'rhofst', 'd99', 'delta', 'theta', 'tauw'
+
+        Returns
+        -------
+        dict
+            Computed values by block: ``{"block_id": value}``
+            Returns empty dict if quantity is not supported.
+
+        Notes
         -----
-            qty: str
-                The name of the variable to compute.
+        This method dynamically calls the appropriate compute method
+        based on the quantity name. Wall normal vectors are computed
+        automatically if needed for boundary layer quantities.
 
-        Returns:
+        Examples
         --------
-            dict: The computed value as a dictionary, or an empty dictionary if the variable
-                  is not supported or the method is not implemented.
-                  The returned dictionary has the following structure:
-                    {
-                        "block id": value
-                    }
+        >>> bl_thickness = pp.compute_qty('delta')
+        >>> wall_shear = pp.compute_qty('tauw')
         """
         # Check wall normal vector file if it has never been read, often needed for BL values:
         if "nwall_normal" not in self.config["grid"]:

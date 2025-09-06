@@ -1,3 +1,24 @@
+Metadata-Version: 2.1
+Name: ppMusicaa
+Version: 1.0.0
+Summary: Post-processing module for Musicaa simulation data
+Home-page: https://github.com/LouenasZm/ppMusicaa
+Author: Louenas Zm
+Author-email: 
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
 # ppMusicaa
 **ppMusicaa** is a framework to postprocess simulations from Musicaa, MUltiblock Solver in Computational Aerodynamics and Aeroacoustics, a well-validated, high-performance CPU numerical solver written in Fortran and parallelized with the MPI library. The code solves the compressible Navier-Stokes equations and relies on a parallel multi-block strategy, alongside coordinate transformation for curvilinear structured grids. 
 

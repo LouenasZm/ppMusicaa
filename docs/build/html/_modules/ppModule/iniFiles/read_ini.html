@@ -1,0 +1,735 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ppModule.iniFiles.read_ini &mdash; ppMusicaa 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ppMusicaa
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#configuration-structure">Configuration Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#required-keys">Required Keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#optional-keys">Optional Keys</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#configuration-examples">Configuration Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#basic-configuration">Basic Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#complete-configuration">Complete Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#configuration-for-different-grid-types">Configuration for Different Grid Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../configuration.html#d-curvilinear-grid-extruded">2D Curvilinear Grid (Extruded)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../configuration.html#d-curvilinear-grid">3D Curvilinear Grid</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#file-structure-requirements">File Structure Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#configuration-validation">Configuration Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#basic-usage">Basic Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#initialization">Initialization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#working-with-statistics">Working with Statistics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#reading-statistics">Reading Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#computing-derived-quantities">Computing Derived Quantities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#working-with-snapshots">Working with Snapshots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#processing-plane-data">Processing Plane Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#processing-line-data">Processing Line Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#processing-point-data">Processing Point Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#advanced-usage">Advanced Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#working-with-multiple-variables">Working with Multiple Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#computing-statistics-and-fluctuations">Computing Statistics and Fluctuations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#performance-tips">Performance Tips</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data_structures.html">Data Structures Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#statistics-data-structure">Statistics Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#return-stats-output"><code class="docutils literal notranslate"><span class="pre">return_stats()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#computed-quantities-data-structure">Computed Quantities Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#compute-qty-output"><code class="docutils literal notranslate"><span class="pre">compute_qty()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#plane-data-structure">Plane Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#planes-output"><code class="docutils literal notranslate"><span class="pre">planes()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#line-data-structure">Line Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#lines-output"><code class="docutils literal notranslate"><span class="pre">lines()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#point-data-structure">Point Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#points-output"><code class="docutils literal notranslate"><span class="pre">points()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#grid-data-structure">Grid Data Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#common-array-shapes">Common Array Shapes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#d-curvilinear-grid">2D Curvilinear Grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#variable-naming-conventions">Variable Naming Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html">ppModule package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-interface">Main Interface Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#interface.PostProcessMusicaa"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles">ppModule.binFiles package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles.read_grid">ppModule.binFiles.read_grid module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#classes">Classes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_grid.ReadGrid"><code class="docutils literal notranslate"><span class="pre">ReadGrid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles.read_snapshots">ppModule.binFiles.read_snapshots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#id1">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadLines"><code class="docutils literal notranslate"><span class="pre">ReadLines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPlanes"><code class="docutils literal notranslate"><span class="pre">ReadPlanes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPoints"><code class="docutils literal notranslate"><span class="pre">ReadPoints</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadSnapshots"><code class="docutils literal notranslate"><span class="pre">ReadSnapshots</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles.read_stats">ppModule.binFiles.read_stats module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_stats.ReadStats"><code class="docutils literal notranslate"><span class="pre">ReadStats</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.compute">ppModule.compute package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#id9">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.compute.compute_2d_curv">ppModule.compute.compute_2d_curv module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv"><code class="docutils literal notranslate"><span class="pre">Compute2DCurv</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.iniFiles">ppModule.iniFiles package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#id10">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.iniFiles.read_ini">ppModule.iniFiles.read_ini module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#id13">Classes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.FeosReader"><code class="docutils literal notranslate"><span class="pre">FeosReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.InfoReader"><code class="docutils literal notranslate"><span class="pre">InfoReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.ParamBlockReader"><code class="docutils literal notranslate"><span class="pre">ParamBlockReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.Reader"><code class="docutils literal notranslate"><span class="pre">Reader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.utils">ppModule.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#id16">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.utils.preprocess_snapshots">ppModule.utils.preprocess_snapshots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.preprocess_snapshots.PreProcessLines"><code class="docutils literal notranslate"><span class="pre">PreProcessLines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.preprocess_snapshots.PreProcessPlanes"><code class="docutils literal notranslate"><span class="pre">PreProcessPlanes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.preprocess_snapshots.PreprocessPoints"><code class="docutils literal notranslate"><span class="pre">PreprocessPoints</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.utils.stats_reader">ppModule.utils.stats_reader module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.stats_reader.StatsReader"><code class="docutils literal notranslate"><span class="pre">StatsReader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/modules.html#module-interface">Main Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.config"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.snapshots_info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.snapshots_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.block_info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.block_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.compute"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.compute</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.compute_qty"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.compute_qty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.lines"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.lines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.planes"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.planes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.points"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.return_stats"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.return_stats()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ppMusicaa</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ppModule.iniFiles.read_ini</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ppModule.iniFiles.read_ini</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Module to read *.ini file, which contains information about simulations</span>
+<span class="sd">    </span>
+<span class="sd">    Classes:</span>
+<span class="sd">    --------</span>
+<span class="sd">    * ParamBlockReader: This class reads the param_blocks file, it helps get information about </span>
+<span class="sd">    snapshots and boundary conditions.</span>
+<span class="sd">    * InfoReader: This class reads the info file, it helps get information about the grid and</span>
+<span class="sd">    the simulation parameters. </span>
+<span class="sd">    * FeosReader: This class reads the feos file, it helps get information about the fluid </span>
+<span class="sd">    properties.</span>
+<span class="sd">    * Reader: This is an abstract class that contains shared methods and attributes for all</span>
+<span class="sd">    the classes above.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="c1"># Set up logger:</span>
+<span class="n">logger</span>      <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">formatter</span>   <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Reader">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.Reader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Reader</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class to read all *ini files, this class containts shared methods and attributes</span>
+<span class="sd">    and checks errors in the configuration. </span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        - file_path (str): path to the ini file</span>
+
+<span class="sd">    ----------</span>
+<span class="sd">    Methods:</span>
+<span class="sd">        - file_path: property to check if the file_path given is a string and if it exists</span>
+<span class="sd">        - _is_valid_key: check if the key is valid in the dictionary</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the Reader with the path to the ini file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path (str): Path to the ini file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span> <span class="o">=</span> <span class="n">file_path</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the file_path given is a string and if it exists.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The file path if it is valid.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If file_path is not a string.</span>
+<span class="sd">            FileNotFoundError: If the file does not exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;file_path must be a string&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;file_path: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span><span class="si">}</span><span class="s2"> does not exist&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span>
+
+    <span class="nd">@file_path</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the file_path attribute.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path (str): The new file path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;file_path must be a string&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span> <span class="o">=</span> <span class="n">file_path</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_valid_key</span><span class="p">(</span><span class="n">dictionnary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the key is valid in the dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;key must be a string&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dictionnary</span></div>
+
+
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="ParamBlockReader">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.ParamBlockReader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParamBlockReader</span><span class="p">(</span><span class="n">Reader</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to read param_blocks.ini file, which contains information about mesh:</span>
+<span class="sd">    * Number of blocks</span>
+<span class="sd">    * Number of points in each direction</span>
+<span class="sd">    * Number of processors in each direction</span>
+<span class="sd">    * Boundary conditions</span>
+<span class="sd">    * Sponge zone</span>
+<span class="sd">    * Snapshots</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        - file_path (str): path to param_blocks.ini file</span>
+<span class="sd">        - block_info (dict): dictionnary containing all information data. </span>
+<span class="sd">        The block_info dictionnary has the following structure:</span>
+<span class="sd">            {</span>
+<span class="sd">                block_id: {</span>
+<span class="sd">                    &#39;Nb points&#39;: {&#39;I&#39;: int, &#39;J&#39;: int, &#39;K&#39;: int},</span>
+<span class="sd">                    &#39;Nb procs&#39;: {&#39;I&#39;: int, &#39;J&#39;: int, &#39;K&#39;: int},</span>
+<span class="sd">                    &#39;Boundary conditions&#39;: [list],</span>
+<span class="sd">                    &#39;Sponge zone&#39;: [list],</span>
+<span class="sd">                    &#39;Snapshots&#39;: [list] (this list is empy, the snapshots </span>
+<span class="sd">                    are read in the read_snapshots methos)</span>
+<span class="sd">                }</span>
+<span class="sd">            }</span>
+
+<span class="sd">        - snapshots_info (dict): dictionnary containing all snapshots information.</span>
+<span class="sd">        The snapshots_info dictionnary has the following structure:</span>
+<span class="sd">            {</span>
+<span class="sd">                block_id: {</span>
+<span class="sd">                [</span>
+<span class="sd">                number of snapshots,</span>
+<span class="sd">                {</span>
+<span class="sd">                    &#39;I1&#39;: int,</span>
+<span class="sd">                    &#39;I2&#39;: int,</span>
+<span class="sd">                    &#39;J1&#39;: int,</span>
+<span class="sd">                    &#39;J2&#39;: int,</span>
+<span class="sd">                    &#39;K1&#39;: int,</span>
+<span class="sd">                    &#39;K2&#39;: int,</span>
+<span class="sd">                    &#39;freq&#39;: int,</span>
+<span class="sd">                    &#39;nvar&#39;: int,</span>
+<span class="sd">                    &#39;list_var&#39;: [list of variables]</span>
+<span class="sd">                }, </span>
+<span class="sd">                ... there are as many dictionnaries as the number of snapshots in the list</span>
+<span class="sd">                ]</span>
+<span class="sd">            }</span>
+
+
+<span class="sd">    Methods:</span>
+<span class="sd">        read_block_info: Read block information from param_blocks.ini file.</span>
+<span class="sd">        read_snapshots: Read snapshots information from param_blocks.ini file.</span>
+<span class="sd">        process_points_procs: (private), Process number of points and processors in each direction.</span>
+<span class="sd">        process_boundary_conditions: (private), Process boundary conditions.</span>
+<span class="sd">        process_sponge_zone: (private), Process sponge zone.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span>    <span class="p">:</span> <span class="nb">dict</span>   <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">:</span> <span class="nb">dict</span>   <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_block</span>          <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="ParamBlockReader.read_block_info">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.ParamBlockReader.read_block_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_block_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the ParamBlockReader with the path to the param_blocks.ini file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path (str): Path to the param_blocks.ini file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Block information, contains number of points in each direction for each</span>
+<span class="sd">            block, number of procs in each direction, boundary conditions, </span>
+<span class="sd">            sponge zone information if it exists and snapshots.</span>
+<span class="sd">            The dictionnary has the following structure:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="c1"># Check if the line starts with &quot;nbloc&quot; to get the number of blocks</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;! nbloc&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="s1">&#39;nbloc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="c1">#</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;! Block #&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_block</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_block</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;Nb points&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;I&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+                    <span class="s1">&#39;Nb procs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;I&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+                    <span class="s1">&#39;Boundary conditions&#39;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s1">&#39;Sponge zone&#39;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s1">&#39;Snapshots&#39;</span><span class="p">:</span> <span class="p">[]</span>
+                <span class="p">}</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_block</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;digit&#39;</span> <span class="ow">and</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                        <span class="n">action</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+                        <span class="n">action</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span></div>
+
+
+<div class="viewcode-block" id="ParamBlockReader.read_snapshots">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.ParamBlockReader.read_snapshots">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_snapshots</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read block information from param_blocks.ini file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Block information, contains number of points in each direction for each</span>
+<span class="sd">            block, number of procs in each direction, boundary conditions, </span>
+<span class="sd">            sponge zone information if it exists and snapshots.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;! Block #&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_block</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_block</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_block</span> <span class="ow">and</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;! Define output snapshots:&#39;</span><span class="p">):</span>
+                <span class="n">num_snapshots</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_block</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num_snapshots</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_snapshots</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">snapshot_line</span>   <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="n">nvar</span>            <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">snapshot_line</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+                    <span class="n">list_var</span>        <span class="o">=</span> <span class="n">snapshot_line</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">8</span><span class="o">+</span><span class="n">nvar</span><span class="p">]</span>
+                    <span class="n">snapshot_info</span>   <span class="o">=</span> <span class="p">{</span>
+                        <span class="s1">&#39;I1&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">snapshot_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                        <span class="s1">&#39;I2&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">snapshot_line</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                        <span class="s1">&#39;J1&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">snapshot_line</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                        <span class="s1">&#39;J2&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">snapshot_line</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+                        <span class="s1">&#39;K1&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">snapshot_line</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span>
+                        <span class="s1">&#39;K2&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">snapshot_line</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span>
+                        <span class="s1">&#39;freq&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">snapshot_line</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span>
+                        <span class="s1">&#39;nvar&#39;</span><span class="p">:</span> <span class="n">nvar</span><span class="p">,</span>
+                        <span class="s1">&#39;list_var&#39;</span><span class="p">:</span> <span class="n">list_var</span>
+                    <span class="p">}</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_block</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">snapshot_info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_points_procs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process number of points and processors in each direction.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            i (int): Index of the current line in the file.</span>
+<span class="sd">            lines (list): List of lines from the file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\s*(\d+)\s+(\d+)\s+\|\s+(\w+-direction)&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                <span class="n">points</span><span class="p">,</span> <span class="n">procs</span><span class="p">,</span> <span class="n">direction</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+                <span class="n">direction</span> <span class="o">=</span> <span class="n">direction</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_block</span><span class="p">][</span><span class="s1">&#39;Nb points&#39;</span><span class="p">][</span><span class="n">direction</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_block</span><span class="p">][</span><span class="s1">&#39;Nb procs&#39;</span><span class="p">][</span><span class="n">direction</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">procs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_boundary_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process boundary conditions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            i (int): Index of the current line in the file.</span>
+<span class="sd">            lines (list): List of lines from the file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">boundary_conditions</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_block</span><span class="p">][</span><span class="s1">&#39;Boundary conditions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">boundary_conditions</span><span class="p">)</span>
+        <span class="n">boundary_conditions</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_block</span><span class="p">][</span><span class="s1">&#39;Boundary conditions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">boundary_conditions</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_sponge_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process sponge zone.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            line (str): Line from param_blocks.ini file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sponge_zone</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_block</span><span class="p">][</span><span class="s1">&#39;Sponge zone&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sponge_zone</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Actions to perform based on the line content.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Actions to perform based on the line content.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;! Nb points&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_points_procs</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">),</span>
+            <span class="s1">&#39;! Boundary conditions&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;! Define output snapshots&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;!&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;Imin&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_boundary_conditions</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">),</span>
+            <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">lines</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_sponge_zone</span><span class="p">(</span><span class="n">line</span><span class="p">),</span>
+        <span class="p">}</span></div>
+
+
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="InfoReader">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.InfoReader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InfoReader</span><span class="p">(</span><span class="n">Reader</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to read info.ini file, which contains generic information about the simulation.</span>
+<span class="sd">    It returns a dictionary containing all necessary information.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        - file_path (str): path to info.ini file</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        - _read_ini_file: (private), method to read info.ini file</span>
+<span class="sd">        - get_value: returns value of a specific key</span>
+<span class="sd">        - is_valid_key: checks if the key given in get_value is valid or not.</span>
+
+<span class="sd">    ---------</span>
+<span class="sd">    Raise:</span>
+<span class="sd">        - KeyError: if the key is not in the file</span>
+<span class="sd">        - TypeError: if the key given is not a string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the InfoReader with the path to the info.ini file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path (str): Path to the info.ini file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_ini_file</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reading info.ini file succesfully&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_read_ini_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read the info.ini file and store the data in a dictionary.</span>
+<span class="sd">        The attribute data should be called instead of the method.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Data read from the ini file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+            <span class="c1"># Read first line:</span>
+            <span class="n">first_line</span>      <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">key_value_pairs</span> <span class="o">=</span> <span class="n">first_line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+            <span class="n">keys</span>            <span class="o">=</span> <span class="n">key_value_pairs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)</span>
+            <span class="n">values</span>          <span class="o">=</span> <span class="n">key_value_pairs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>   <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="c1"># Blocks line:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">])):</span>
+                <span class="n">block_line</span>  <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+                <span class="n">values</span>      <span class="o">=</span> <span class="n">block_line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">block_id</span>    <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">block_id</span><span class="p">]</span>    <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;nx&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                    <span class="s1">&#39;ny&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                    <span class="s1">&#39;nz&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="p">}</span>
+            <span class="c1"># Rest of the file:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]):]:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">key_value_pairs</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span>
+                <span class="n">keys</span> <span class="o">=</span> <span class="n">key_value_pairs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">key_value_pairs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+
+<div class="viewcode-block" id="InfoReader.get_value">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.InfoReader.get_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to get a specific information from ini file, based on the key.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str): The key to look for in the ini file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The value associated with the key.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            KeyError: If the key is not in the file.</span>
+<span class="sd">            TypeError: If the key given is not a string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid_key</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Key: </span><span class="si">%s</span><span class="s2"> not found in the file&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="InfoReader.is_valid_key">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.InfoReader.is_valid_key">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if key is a string and it is contained in the info.ini file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str): The key to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the key is valid, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_valid_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></div>
+</div>
+
+
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="FeosReader">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.FeosReader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FeosReader</span><span class="p">(</span><span class="n">Reader</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to read feos_{fluid}.ini file, which containts information about the fluid</span>
+<span class="sd">    properties. This is useful to compute Flow-Through domaine Time and other </span>
+<span class="sd">    characteristis of each simulation.</span>
+
+<span class="sd">    It is mainly useful to run unsteady simulations using Musicaa&#39;s wrapper.</span>
+
+<span class="sd">    -----------</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        - path (str): path to directory where file is stored</span>
+<span class="sd">        - fluid (str): fluid name </span>
+<span class="sd">        - feos (dict): dictionnary containing all information data</span>
+
+<span class="sd">    --------</span>
+<span class="sd">    Methods:</span>
+<span class="sd">        - read_feos: read fluid properties</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fluid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fluid</span> <span class="o">=</span> <span class="n">fluid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feos</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_feos</span><span class="p">()</span>
+
+<div class="viewcode-block" id="FeosReader.read_feos">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.FeosReader.read_feos">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_feos</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to read feos_.ini file, it uses Regex to compile format of the text</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/feos_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fluid</span><span class="si">}</span><span class="s2">.ini&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                <span class="c1"># Ignore comments and empty lines:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span> <span class="ow">or</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">)):</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Use regex to split the line into key and value</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(.*?)(?:\.+)\s+(.+)$&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                    <span class="c1"># Try to convert the value to a float if possible</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">pass</span>  <span class="c1"># Keep as string if conversion fails</span>
+
+                    <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="FeosReader.is_valid_key">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.FeosReader.is_valid_key">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if a key is present in feos dictionnary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_valid_key</span><span class="p">(</span><span class="n">dictionnary</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feos</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

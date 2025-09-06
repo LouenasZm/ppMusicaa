@@ -1,0 +1,716 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ppModule.compute.compute_2d_curv &mdash; ppMusicaa 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ppMusicaa
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#configuration-structure">Configuration Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#required-keys">Required Keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#optional-keys">Optional Keys</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#configuration-examples">Configuration Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#basic-configuration">Basic Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#complete-configuration">Complete Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#configuration-for-different-grid-types">Configuration for Different Grid Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../configuration.html#d-curvilinear-grid-extruded">2D Curvilinear Grid (Extruded)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../configuration.html#d-curvilinear-grid">3D Curvilinear Grid</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#file-structure-requirements">File Structure Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#configuration-validation">Configuration Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#basic-usage">Basic Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#initialization">Initialization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#working-with-statistics">Working with Statistics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#reading-statistics">Reading Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#computing-derived-quantities">Computing Derived Quantities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#working-with-snapshots">Working with Snapshots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#processing-plane-data">Processing Plane Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#processing-line-data">Processing Line Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#processing-point-data">Processing Point Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#advanced-usage">Advanced Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#working-with-multiple-variables">Working with Multiple Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#computing-statistics-and-fluctuations">Computing Statistics and Fluctuations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#performance-tips">Performance Tips</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data_structures.html">Data Structures Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#statistics-data-structure">Statistics Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#return-stats-output"><code class="docutils literal notranslate"><span class="pre">return_stats()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#computed-quantities-data-structure">Computed Quantities Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#compute-qty-output"><code class="docutils literal notranslate"><span class="pre">compute_qty()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#plane-data-structure">Plane Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#planes-output"><code class="docutils literal notranslate"><span class="pre">planes()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#line-data-structure">Line Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#lines-output"><code class="docutils literal notranslate"><span class="pre">lines()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#point-data-structure">Point Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#points-output"><code class="docutils literal notranslate"><span class="pre">points()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#grid-data-structure">Grid Data Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#common-array-shapes">Common Array Shapes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#d-curvilinear-grid">2D Curvilinear Grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#variable-naming-conventions">Variable Naming Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html">ppModule package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-interface">Main Interface Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#interface.PostProcessMusicaa"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles">ppModule.binFiles package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles.read_grid">ppModule.binFiles.read_grid module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#classes">Classes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_grid.ReadGrid"><code class="docutils literal notranslate"><span class="pre">ReadGrid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles.read_snapshots">ppModule.binFiles.read_snapshots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#id1">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadLines"><code class="docutils literal notranslate"><span class="pre">ReadLines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPlanes"><code class="docutils literal notranslate"><span class="pre">ReadPlanes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPoints"><code class="docutils literal notranslate"><span class="pre">ReadPoints</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadSnapshots"><code class="docutils literal notranslate"><span class="pre">ReadSnapshots</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles.read_stats">ppModule.binFiles.read_stats module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_stats.ReadStats"><code class="docutils literal notranslate"><span class="pre">ReadStats</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.compute">ppModule.compute package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#id9">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.compute.compute_2d_curv">ppModule.compute.compute_2d_curv module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv"><code class="docutils literal notranslate"><span class="pre">Compute2DCurv</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.iniFiles">ppModule.iniFiles package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#id10">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.iniFiles.read_ini">ppModule.iniFiles.read_ini module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#id13">Classes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.FeosReader"><code class="docutils literal notranslate"><span class="pre">FeosReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.InfoReader"><code class="docutils literal notranslate"><span class="pre">InfoReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.ParamBlockReader"><code class="docutils literal notranslate"><span class="pre">ParamBlockReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.Reader"><code class="docutils literal notranslate"><span class="pre">Reader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.utils">ppModule.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#id16">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.utils.preprocess_snapshots">ppModule.utils.preprocess_snapshots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.preprocess_snapshots.PreProcessLines"><code class="docutils literal notranslate"><span class="pre">PreProcessLines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.preprocess_snapshots.PreProcessPlanes"><code class="docutils literal notranslate"><span class="pre">PreProcessPlanes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.preprocess_snapshots.PreprocessPoints"><code class="docutils literal notranslate"><span class="pre">PreprocessPoints</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.utils.stats_reader">ppModule.utils.stats_reader module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.stats_reader.StatsReader"><code class="docutils literal notranslate"><span class="pre">StatsReader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/modules.html#module-interface">Main Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.config"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.snapshots_info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.snapshots_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.block_info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.block_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.compute"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.compute</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.compute_qty"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.compute_qty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.lines"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.lines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.planes"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.planes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.points"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.return_stats"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.return_stats()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ppMusicaa</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ppModule.compute.compute_2d_curv</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ppModule.compute.compute_2d_curv</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Module contains class to compute quantities for cases with 2D</span>
+<span class="sd">    curvilinear or extruded 3D curvilinear grid.</span>
+<span class="sd">    </span>
+<span class="sd">    N.B: the module assumes the user followed the convention of having the walls</span>
+<span class="sd">    located at jmin in the block.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w">      </span><span class="kn">import</span> <span class="n">interp1d</span>           <span class="c1"># type: ignore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w">          </span><span class="kn">import</span> <span class="n">gaussian_filter1d</span>  <span class="c1"># type: ignore</span>
+
+<span class="c1"># Set up logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Compute2DCurv">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Compute2DCurv</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class to compute first and second order quantities for cases with 2D curvilinear or</span>
+<span class="sd">        extruded 3D curvilinear grid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                 <span class="n">info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                 <span class="n">stats</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                 <span class="n">block_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize class attributes with grid, info and stats.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span>   <span class="o">=</span> <span class="n">grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span>   <span class="o">=</span> <span class="n">info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>  <span class="o">=</span> <span class="n">stats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span> <span class="o">=</span> <span class="n">block_info</span>
+
+
+    <span class="c1"># ======================== Public methods:</span>
+<div class="viewcode-block" id="Compute2DCurv.compute_ufst">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv.compute_ufst">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_ufst</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute freestream velocity at each mesh for multiblock grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">block_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Check if there is a wall:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;Boundary conditions&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span> \
+                            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;Boundary conditions&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+                <span class="c1"># Get freestream velocity:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;j99&quot;</span><span class="p">]</span> <span class="o">=</span> \
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">_freestream_velocity</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block_id</span><span class="p">)</span>
+                <span class="c1"># Hotfix of a bug where U_fst at the inlet is 0.0:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Freestream velocity is zero for block </span><span class="si">%d</span><span class="s2"> in i= 0, &quot;</span>
+                                   <span class="s2">&quot;setting ufst to reference velocity.&quot;</span><span class="p">,</span> <span class="n">block_id</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="c1"># Check if there is a slip wall:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;Boundary conditions&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span> \
+                            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;Boundary conditions&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;s&quot;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Block </span><span class="si">%d</span><span class="s2"> has slip wall at jmin. &quot;</span> \
+                            <span class="s2">&quot;Freestream velocity set to reference velocity.&quot;</span><span class="p">,</span> <span class="n">block_id</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">]</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;Uref&quot;</span><span class="p">]</span> \
+                                            <span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;j99&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">])</span>
+            <span class="c1"># Block with no wall at all:</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Block </span><span class="si">%d</span><span class="s2"> has no wall at jmin. &quot;</span> \
+                            <span class="s2">&quot;Freestream velocity set to reference velocity.&quot;</span><span class="p">,</span> <span class="n">block_id</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][:]</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;Uref&quot;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;j99&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Freestream velocity computed for all blocks.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Compute2DCurv.compute_rhofst">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv.compute_rhofst">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_rhofst</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute freestream density at each mesh for multiblock grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if freestream velocity is already computed:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_stats</span><span class="p">(</span><span class="s2">&quot;ufst&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_ufst</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">block_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Get freestream velocity:</span>
+            <span class="n">u_fst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">]</span>
+            <span class="n">j_fst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;j99&quot;</span><span class="p">]</span>
+
+            <span class="c1"># Compute freestream density:</span>
+            <span class="n">rho_fst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">u_fst</span><span class="p">)</span>
+            <span class="c1"># Check if there is a wall:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;Boundary conditions&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span> \
+                            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;Boundary conditions&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]):</span>
+                    <span class="n">index</span>       <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">j_fst</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">rho_fst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;rho&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span>
+                <span class="c1"># Hotfix of bug for rho_fst at the inlet:</span>
+                <span class="k">if</span> <span class="n">rho_fst</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Freestream density is zero for block </span><span class="si">%d</span><span class="s2"> in i= 0, &quot;</span>
+                                   <span class="s2">&quot;setting rho_fst to reference density.&quot;</span><span class="p">,</span> <span class="n">block_id</span><span class="p">)</span>
+                    <span class="n">rho_fst</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">rho_fst</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]):</span>
+                    <span class="n">rho_fst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;Roref&quot;</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;rho_fst&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rho_fst</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Freestream density computed for all blocks.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Compute2DCurv.compute_d99">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv.compute_d99">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_d99</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute 99% boundary layer thickness at each mesh point for multiblock grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#</span>
+        <span class="n">wall_normal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;nwall_normal&quot;</span><span class="p">]</span>
+        <span class="c1"># Check if freestream velocity is already computed:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_stats</span><span class="p">(</span><span class="s2">&quot;ufst&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_ufst</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">block_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Check if there is a wall:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;Boundary conditions&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span> \
+                            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;Boundary conditions&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+                <span class="c1"># Compute d99:</span>
+                <span class="n">d99</span><span class="p">,</span> <span class="n">j99</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_d99_thickness</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block_id</span><span class="p">,</span>
+                                                  <span class="n">normal_w</span><span class="o">=</span><span class="n">wall_normal</span><span class="p">[</span><span class="n">block_id</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">d99</span><span class="p">,</span> <span class="n">j99</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]),</span>\
+                              <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;d99&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d99</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;j99&quot;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">j99</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;99% boundary layer thickness computed for all blocks.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Compute2DCurv.compute_delta">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv.compute_delta">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_delta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes displacement thickness at each mesh point for multiblock grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if freestream velocity is already computed:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_stats</span><span class="p">(</span><span class="s2">&quot;ufst&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_ufst</span><span class="p">()</span>
+
+        <span class="c1"># Check if d99 is already computed:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_stats</span><span class="p">(</span><span class="s2">&quot;d99&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_d99</span><span class="p">()</span>
+
+        <span class="c1"># Check if freestream density is already computed:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_stats</span><span class="p">(</span><span class="s2">&quot;rho_fst&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_rhofst</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">block_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Check if there is a wall:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;Boundary conditions&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span> \
+                            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;Boundary conditions&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+                <span class="c1"># Compute displacement thickness:</span>
+                <span class="n">deltas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_displacement_thickness</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block_id</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">deltas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">])</span>
+
+            <span class="c1"># Store displacement thickness in stats:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;deltas&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deltas</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Displacement thickness computed for all blocks.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Compute2DCurv.compute_theta">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv.compute_theta">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_theta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes momentum thickness at each mesh point for multiblock grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if freestream velocity is already computed:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_stats</span><span class="p">(</span><span class="s2">&quot;ufst&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_ufst</span><span class="p">()</span>
+        <span class="c1"># Check if d99 is already computed:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_stats</span><span class="p">(</span><span class="s2">&quot;d99&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_d99</span><span class="p">()</span>
+        <span class="c1"># Check if freestream density is already computed:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_stats</span><span class="p">(</span><span class="s2">&quot;rho_fst&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_rhofst</span><span class="p">()</span>
+        <span class="c1"># Compute theta:</span>
+        <span class="k">for</span> <span class="n">block_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Compute momentum thickness:</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_momentum_thickness</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block_id</span><span class="p">)</span>
+
+            <span class="c1"># Store momentum thickness in stats:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;theta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Momentum thickness computed for all blocks.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Compute2DCurv.compute_tauw">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv.compute_tauw">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_tauw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes wall shear stress and skin friction coefficient for multiblock grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if freestream velocity is already computed:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_stats</span><span class="p">(</span><span class="s2">&quot;ufst&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_ufst</span><span class="p">()</span>
+
+        <span class="c1"># Check if freestream density is already computed:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_stats</span><span class="p">(</span><span class="s2">&quot;rho_fst&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_rhofst</span><span class="p">()</span>
+        <span class="c1"># Check if wall normal vector is already computed:</span>
+        <span class="n">nwall_normal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;nwall_normal&quot;</span><span class="p">]</span>
+        <span class="c1">#</span>
+        <span class="k">for</span> <span class="n">block_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">mu_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;mu&quot;</span><span class="p">][:,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">dudn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wall_normal_velocity</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block_id</span><span class="p">,</span> <span class="n">normal_w</span><span class="o">=</span><span class="n">nwall_normal</span><span class="p">[</span><span class="n">block_id</span><span class="p">])</span>
+            <span class="c1"># Wall shear stress:</span>
+            <span class="n">tauw</span> <span class="o">=</span> <span class="n">mu_w</span> <span class="o">*</span> <span class="n">dudn</span>
+            <span class="n">cf</span>   <span class="o">=</span> <span class="n">tauw</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;rho_fst&quot;</span><span class="p">]</span> <span class="o">*</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># Store wall shear stress and skin friction coefficient in stats:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;tauw&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tauw</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;cf&quot;</span><span class="p">]</span>   <span class="o">=</span> <span class="n">cf</span>
+
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Skin friction coefficient computed for all blocks.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Compute2DCurv.compute_wall_normal">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv.compute_wall_normal">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_wall_normal</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assumes the wall normal vector is constant at jmin and goes upwards.</span>
+<span class="sd">        This method is called if the file &quot;norm_surf.dat&quot; is not found in the directory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;In compute wall normal&quot;</span><span class="p">)</span>
+        <span class="n">wall_normal</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">normal_x</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">])</span>
+            <span class="n">normal_y</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">])</span>
+            <span class="c1">#</span>
+            <span class="n">wall_normal</span><span class="p">[</span><span class="n">block</span><span class="p">]</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">normal_x</span><span class="p">,</span> <span class="n">normal_y</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">wall_normal</span></div>
+
+    <span class="c1"># ======================== Private methods:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_freestream_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute freestream velocity at each mesh location for a given block using </span>
+<span class="sd">        criterion on vorticity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vorticity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho*dvx&quot;</span><span class="p">]</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho&quot;</span><span class="p">]</span> \
+                    <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho*duy&quot;</span><span class="p">]</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho&quot;</span><span class="p">]</span>
+
+        <span class="n">u_fst</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">vorticity</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">j_fst</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">vorticity</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]):</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;ny&quot;</span><span class="p">]):</span>
+                <span class="c1"># Detect separation to start criterion higher:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">offset</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">2</span>
+            <span class="c1">#</span>
+            <span class="n">ind_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">][</span><span class="n">i</span><span class="p">,</span><span class="n">offset</span><span class="p">:]</span><span class="o">*</span><span class="n">vorticity</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">offset</span><span class="p">:]</span> <span class="o">&lt;</span> <span class="n">c</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ind_</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ind_</span>     <span class="o">=</span> <span class="n">ind_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">u_fst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">ind_</span><span class="p">]</span>
+                <span class="n">j_fst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span> <span class="n">ind_</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">u_fst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Check for non continuity in the velocity field:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_vel_discontinuity</span><span class="p">(</span><span class="n">u_fst</span><span class="p">,</span> <span class="n">j_fst</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_vel_discontinuity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ufst</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">jfst</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check for discontinuity in the velocity field.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            - ufst (np.ndarray): Freestream velocity.</span>
+<span class="sd">            - jfst (np.ndarray): Indices of freestream velocity.</span>
+<span class="sd">            - block (int): Block number.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">m</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ufst</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">ufst</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ufst</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="mi">100</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Get indices of points to interpolate</span>
+            <span class="n">i1</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">i1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ufst</span><span class="p">,</span> <span class="n">jfst</span>
+
+            <span class="n">i1</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="n">i2</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Known points:</span>
+            <span class="n">x1</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">][:</span><span class="n">i1</span> <span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">jfst</span><span class="p">[</span><span class="n">i1</span><span class="p">])]</span>
+            <span class="n">x2</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">][</span><span class="n">i2</span><span class="p">:</span> <span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">jfst</span><span class="p">[</span><span class="n">i2</span><span class="p">])]</span>
+            <span class="n">u1</span>  <span class="o">=</span> <span class="n">ufst</span><span class="p">[:</span><span class="n">i1</span><span class="p">]</span>
+            <span class="n">u2</span>  <span class="o">=</span> <span class="n">ufst</span><span class="p">[</span><span class="n">i2</span><span class="p">:]</span>
+
+            <span class="c1"># Apply gaussian filter to smoothern u1 and u2:</span>
+            <span class="n">u1</span>  <span class="o">=</span> <span class="n">gaussian_filter1d</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">u1</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">u2</span>  <span class="o">=</span> <span class="n">gaussian_filter1d</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">u2</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+            <span class="c1"># Interpolation for points between k and m:</span>
+            <span class="n">x_interp</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">][</span><span class="n">i1</span><span class="p">:</span><span class="n">i2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">jfst</span><span class="p">[</span><span class="n">i2</span><span class="p">])]</span>
+
+            <span class="c1"># Create interpolation function:</span>
+            <span class="n">interpolator</span>    <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">]),</span>
+                                       <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">u1</span><span class="p">,</span> <span class="n">u2</span><span class="p">]),</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;cubic&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Interpolate velocity:</span>
+            <span class="n">u_interp</span>    <span class="o">=</span> <span class="n">interpolator</span><span class="p">(</span><span class="n">x_interp</span><span class="p">)</span>
+            <span class="c1"># Combine all:</span>
+            <span class="n">u_all</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">u1</span><span class="p">,</span> <span class="n">u_interp</span><span class="p">,</span> <span class="n">u2</span><span class="p">])</span>
+
+            <span class="c1"># Change j_fst as well:</span>
+            <span class="n">jfst</span><span class="p">[</span><span class="n">i1</span><span class="p">:</span><span class="n">i2</span><span class="p">]</span> <span class="o">=</span> <span class="n">jfst</span><span class="p">[</span><span class="n">i2</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="n">u_all</span><span class="p">,</span> <span class="n">jfst</span>
+
+        <span class="k">return</span> <span class="n">ufst</span><span class="p">,</span> <span class="n">jfst</span>
+    <span class="c1">#</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_d99_thickness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">normal_w</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute d99 boundary layer thickness for a single block</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d99</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">])</span>
+        <span class="n">jmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]):</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.99</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> \
+                    <span class="ow">and</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;ny&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">normal_w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;normal_w must be provided for curvilinear meshes.&quot;</span><span class="p">)</span>
+                <span class="n">l_jm1</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span>
+                         <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                          <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+                <span class="c1">#</span>
+                <span class="n">dl_j</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+                <span class="c1">#</span>
+                <span class="n">l_j</span> <span class="o">=</span> <span class="n">dl_j</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.99</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> \
+                        <span class="o">/</span>   <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">l_jm1</span>
+                <span class="c1"># Multiply by normal_w:</span>
+                <span class="n">d99</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">l_j</span> <span class="o">*</span> <span class="n">normal_w</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+            <span class="n">jmax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span>
+
+        <span class="k">return</span> <span class="n">d99</span><span class="p">,</span> <span class="n">jmax</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_displacement_thickness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes displacement thickness at each mesh point for a given block.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Computing displacement thickness for block </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">deltas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;j99&quot;</span><span class="p">]):</span>
+                <span class="c1"># Arg 1 and arg2 for trapezoidal rule:</span>
+                <span class="n">arg1</span>    <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>   <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> \
+                    <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho_fst&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">arg2</span>    <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>\
+                    <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho_fst&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                <span class="c1"># Compute deltas using trapezoidal rule:</span>
+                <span class="n">deltas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>   <span class="o">=</span>  <span class="n">deltas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">arg1</span> <span class="o">+</span> <span class="n">arg2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> \
+                                                        <span class="o">+</span>  <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+
+        <span class="k">return</span> <span class="n">deltas</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_momentum_thickness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes momentum thickness at each mesh point for a given block.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">])</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">][</span><span class="n">block</span><span class="p">]</span>
+        <span class="c1">#</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]):</span>
+            <span class="c1"># Loop through x:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;j99&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)):</span>
+                <span class="c1"># Arg 1 and arg2 for trapezoidal rule:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Freestream velocity is zero for block </span><span class="si">%d</span><span class="s2"> in i= </span><span class="si">%d</span><span class="s2">, j= </span><span class="si">%d</span><span class="s2"> &quot;</span>
+                                   <span class="s2">&quot;setting theta to zero.&quot;</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho_fst&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Freestream density is zero for block </span><span class="si">%d</span><span class="s2"> in i= </span><span class="si">%d</span><span class="s2">, &quot;</span>
+                                   <span class="s2">&quot;setting theta to zero.&quot;</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+
+                <span class="n">arg1</span>            <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>      <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>\
+                        <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>      <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">arg2</span>            <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>  <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>\
+                        <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;uu&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>  <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;ufst&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+                <span class="c1"># Compute theta using trapezoidal rule:</span>
+                <span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>   <span class="o">+=</span> <span class="p">(</span><span class="n">arg1</span> <span class="o">+</span> <span class="n">arg2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> \
+                                            <span class="o">+</span>   <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+        <span class="k">return</span> <span class="n">theta</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_wall_normal_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">normal_w</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes wall normal velocity at each mesh point for a given block.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tangent</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]))</span>
+        <span class="n">tangent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="o">=</span> <span class="n">normal_w</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">tangent</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="o">=</span> <span class="o">-</span><span class="n">normal_w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1">#</span>
+        <span class="n">dudn</span> <span class="o">=</span> <span class="p">(</span>  <span class="p">(</span><span class="o">-</span><span class="n">tangent</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho*dux&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]</span>
+                  <span class="o">+</span> <span class="n">tangent</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho*duy&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]</span>
+                  <span class="p">)</span><span class="o">*</span> <span class="n">tangent</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span>
+                <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="n">tangent</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho*dvx&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]</span>
+                  <span class="o">+</span> <span class="n">tangent</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho*dvy&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;rho&quot;</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]</span>
+                  <span class="p">)</span><span class="o">*</span> <span class="n">tangent</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dudn</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_in_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qty</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if a specific quantity exists in the stats dictionary.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            - quantity (str): The quantity to check for.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            - bool: True if the quantity exists for all blocks, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">qty</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+        
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

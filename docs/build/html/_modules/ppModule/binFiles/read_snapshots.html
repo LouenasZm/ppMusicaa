@@ -1,0 +1,919 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ppModule.binFiles.read_snapshots &mdash; ppMusicaa 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ppMusicaa
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#configuration-structure">Configuration Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#required-keys">Required Keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#optional-keys">Optional Keys</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#configuration-examples">Configuration Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#basic-configuration">Basic Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#complete-configuration">Complete Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#configuration-for-different-grid-types">Configuration for Different Grid Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../configuration.html#d-curvilinear-grid-extruded">2D Curvilinear Grid (Extruded)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../configuration.html#d-curvilinear-grid">3D Curvilinear Grid</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#file-structure-requirements">File Structure Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#configuration-validation">Configuration Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#basic-usage">Basic Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#initialization">Initialization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#working-with-statistics">Working with Statistics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#reading-statistics">Reading Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#computing-derived-quantities">Computing Derived Quantities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#working-with-snapshots">Working with Snapshots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#processing-plane-data">Processing Plane Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#processing-line-data">Processing Line Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#processing-point-data">Processing Point Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#advanced-usage">Advanced Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#working-with-multiple-variables">Working with Multiple Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#computing-statistics-and-fluctuations">Computing Statistics and Fluctuations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#performance-tips">Performance Tips</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data_structures.html">Data Structures Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#statistics-data-structure">Statistics Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#return-stats-output"><code class="docutils literal notranslate"><span class="pre">return_stats()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#computed-quantities-data-structure">Computed Quantities Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#compute-qty-output"><code class="docutils literal notranslate"><span class="pre">compute_qty()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#plane-data-structure">Plane Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#planes-output"><code class="docutils literal notranslate"><span class="pre">planes()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#line-data-structure">Line Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#lines-output"><code class="docutils literal notranslate"><span class="pre">lines()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#point-data-structure">Point Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#points-output"><code class="docutils literal notranslate"><span class="pre">points()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#grid-data-structure">Grid Data Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#common-array-shapes">Common Array Shapes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#d-curvilinear-grid">2D Curvilinear Grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#variable-naming-conventions">Variable Naming Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html">ppModule package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-interface">Main Interface Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#interface.PostProcessMusicaa"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles">ppModule.binFiles package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles.read_grid">ppModule.binFiles.read_grid module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#classes">Classes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_grid.ReadGrid"><code class="docutils literal notranslate"><span class="pre">ReadGrid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles.read_snapshots">ppModule.binFiles.read_snapshots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#id1">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadLines"><code class="docutils literal notranslate"><span class="pre">ReadLines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPlanes"><code class="docutils literal notranslate"><span class="pre">ReadPlanes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPoints"><code class="docutils literal notranslate"><span class="pre">ReadPoints</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadSnapshots"><code class="docutils literal notranslate"><span class="pre">ReadSnapshots</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles.read_stats">ppModule.binFiles.read_stats module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_stats.ReadStats"><code class="docutils literal notranslate"><span class="pre">ReadStats</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.compute">ppModule.compute package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#id9">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.compute.compute_2d_curv">ppModule.compute.compute_2d_curv module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv"><code class="docutils literal notranslate"><span class="pre">Compute2DCurv</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.iniFiles">ppModule.iniFiles package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#id10">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.iniFiles.read_ini">ppModule.iniFiles.read_ini module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#id13">Classes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.FeosReader"><code class="docutils literal notranslate"><span class="pre">FeosReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.InfoReader"><code class="docutils literal notranslate"><span class="pre">InfoReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.ParamBlockReader"><code class="docutils literal notranslate"><span class="pre">ParamBlockReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.Reader"><code class="docutils literal notranslate"><span class="pre">Reader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.utils">ppModule.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#id16">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.utils.preprocess_snapshots">ppModule.utils.preprocess_snapshots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.preprocess_snapshots.PreProcessLines"><code class="docutils literal notranslate"><span class="pre">PreProcessLines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.preprocess_snapshots.PreProcessPlanes"><code class="docutils literal notranslate"><span class="pre">PreProcessPlanes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.preprocess_snapshots.PreprocessPoints"><code class="docutils literal notranslate"><span class="pre">PreprocessPoints</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.utils.stats_reader">ppModule.utils.stats_reader module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.stats_reader.StatsReader"><code class="docutils literal notranslate"><span class="pre">StatsReader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/modules.html#module-interface">Main Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.config"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.snapshots_info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.snapshots_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.block_info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.block_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.compute"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.compute</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.compute_qty"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.compute_qty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.lines"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.lines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.planes"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.planes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.points"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.return_stats"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.return_stats()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ppMusicaa</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ppModule.binFiles.read_snapshots</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ppModule.binFiles.read_snapshots</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module to read Musicaa&#39;s snapshots from binary files.</span>
+
+<span class="sd">The snapshots are returned in a dictionary with block IDs, variable names, </span>
+<span class="sd">and arrays. The module is used by the ppModule to read the snapshots from </span>
+<span class="sd">the binary files. It also provides a static method to read 2D binary data, </span>
+<span class="sd">which can be used to read statistics or other related data.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">ReadSnapshots</span>
+<span class="sd">    Abstract class to read snapshots from binary files.</span>
+<span class="sd">ReadPlanes</span>
+<span class="sd">    Class to read planes from binary files.</span>
+<span class="sd">ReadLines</span>
+<span class="sd">    Class to read lines from binary files.</span>
+<span class="sd">ReadPoints</span>
+<span class="sd">    Class to read points from binary files.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ReadSnapshots">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadSnapshots">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReadSnapshots</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class to read snapshots from binary files. </span>
+<span class="sd">    </span>
+<span class="sd">    This class implements common methods to read snapshots from bianry files. </span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    info : dict</span>
+<span class="sd">        Dictionary containing information from the `info.ini` file.</span>
+<span class="sd">    directory : str</span>
+<span class="sd">        Directory where the binary files are located.</span>
+<span class="sd">    snapshots_info : dict</span>
+<span class="sd">        Dictionary containing information about the snapshots.</span>
+<span class="sd">    self.info_plane : dict</span>
+<span class="sd">        Dictionary containing information about the planes.</span>
+<span class="sd">    self.info_point : dict</span>
+<span class="sd">        Dictionary containing information about the points.</span>
+<span class="sd">    self.info_line  : dict</span>
+<span class="sd">        Dictionary containing information about the lines.</span>
+<span class="sd">    self.info_volume: dict</span>
+<span class="sd">        Dictionary containing information about the volumes.</span>
+<span class="sd">    </span>
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    process_snapshots()</span>
+<span class="sd">        Process snapshots information to get planes&#39; information.</span>
+<span class="sd">    _process_planes(block_id, snapshot_id)</span>
+<span class="sd">        (private) Process information of a plane and return a dictionary with the information.</span>
+<span class="sd">    _process_lines(block_id, snapshot_id)</span>
+<span class="sd">        (private) Process information of a line and return a dictionary with the information.</span>
+<span class="sd">    _process_points(block_id, snapshot_id)</span>
+<span class="sd">        (private) Process information of a point and return a dictionary with the information.</span>
+<span class="sd">    _process_volumes(block_id, snapshot_id)</span>
+<span class="sd">        (private) Process information of a volume and return a dictionary with the information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repo</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">snapshots_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the class with the information of the binary files.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        repo : str</span>
+<span class="sd">            Directory where the binary files are located.</span>
+<span class="sd">        info : dict</span>
+<span class="sd">            Dictionary containing information from the `info.ini` file.</span>
+<span class="sd">        snapshots_info : dict</span>
+<span class="sd">            Dictionary containing information about the snapshots.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">repo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span> <span class="o">=</span> <span class="n">snapshots_info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span> <span class="p">:</span> <span class="nb">dict</span><span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span> <span class="p">:</span> <span class="nb">dict</span><span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span>  <span class="p">:</span> <span class="nb">dict</span><span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">:</span> <span class="nb">dict</span><span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_snapshots</span><span class="p">()</span>
+
+    <span class="c1"># ======== Public methods ========</span>
+<div class="viewcode-block" id="ReadSnapshots.process_snapshots">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadSnapshots.process_snapshots">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_snapshots</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process snapshots information to get planes&#39; information.</span>
+
+<span class="sd">        Useful if the number of snapshots is not equal to the number of planes.</span>
+<span class="sd">        For example, when saving lines or points along with planes.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Dictionary containing processed information about planes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Process informations:</span>
+        <span class="n">nblc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;nbloc&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">ib</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nblc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Initialize the dictionary for each block</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span> <span class="p">[</span><span class="n">ib</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span>  <span class="p">[</span><span class="n">ib</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span> <span class="p">[</span><span class="n">ib</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">[</span><span class="n">ib</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="c1">#</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span> <span class="p">[</span><span class="n">ib</span><span class="p">][</span><span class="s1">&#39;nb_p&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span>  <span class="p">[</span><span class="n">ib</span><span class="p">][</span><span class="s1">&#39;nb_l&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span> <span class="p">[</span><span class="n">ib</span><span class="p">][</span><span class="s1">&#39;nb_pt&#39;</span><span class="p">]</span><span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">[</span><span class="n">ib</span><span class="p">][</span><span class="s1">&#39;nb_v&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1">#</span>
+            <span class="k">for</span> <span class="n">num_sn</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">ib</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">i1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">ib</span><span class="p">][</span><span class="n">num_sn</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span>
+                <span class="n">i2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">ib</span><span class="p">][</span><span class="n">num_sn</span><span class="p">][</span><span class="s1">&#39;I2&#39;</span><span class="p">]</span>
+                <span class="n">j1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">ib</span><span class="p">][</span><span class="n">num_sn</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span>
+                <span class="n">j2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">ib</span><span class="p">][</span><span class="n">num_sn</span><span class="p">][</span><span class="s1">&#39;J2&#39;</span><span class="p">]</span>
+                <span class="n">k1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">ib</span><span class="p">][</span><span class="n">num_sn</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span>
+                <span class="n">k2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">ib</span><span class="p">][</span><span class="n">num_sn</span><span class="p">][</span><span class="s1">&#39;K2&#39;</span><span class="p">]</span>
+                <span class="c1"># Planes</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">i1</span> <span class="o">==</span> <span class="n">i2</span> <span class="ow">and</span> <span class="p">(</span><span class="n">j1</span> <span class="o">!=</span> <span class="n">j2</span> <span class="ow">and</span> <span class="n">k1</span> <span class="o">!=</span> <span class="n">k2</span><span class="p">))</span> \
+                    <span class="ow">or</span> <span class="p">(</span><span class="n">j1</span> <span class="o">==</span> <span class="n">j2</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i1</span> <span class="o">!=</span> <span class="n">i2</span> <span class="ow">and</span> <span class="n">k1</span> <span class="o">!=</span> <span class="n">k2</span><span class="p">))</span> \
+                    <span class="ow">or</span> <span class="p">(</span><span class="n">k1</span> <span class="o">==</span> <span class="n">k2</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i1</span> <span class="o">!=</span> <span class="n">i2</span> <span class="ow">and</span> <span class="n">j1</span> <span class="o">!=</span> <span class="n">j2</span><span class="p">)):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">process_planes</span><span class="p">(</span><span class="n">ib</span><span class="p">,</span> <span class="n">num_sn</span><span class="p">)</span>
+                <span class="c1"># Lines</span>
+                <span class="k">elif</span>    <span class="p">(</span><span class="n">j1</span> <span class="o">==</span> <span class="n">j2</span> <span class="ow">and</span> <span class="n">i1</span> <span class="o">==</span> <span class="n">i2</span> <span class="ow">and</span> <span class="n">k1</span> <span class="o">!=</span> <span class="n">k2</span><span class="p">)</span> <span class="ow">or</span> \
+                        <span class="p">(</span><span class="n">j1</span> <span class="o">==</span> <span class="n">j1</span> <span class="ow">and</span> <span class="n">k1</span> <span class="o">==</span> <span class="n">k2</span> <span class="ow">and</span> <span class="n">i1</span> <span class="o">!=</span> <span class="n">i2</span><span class="p">)</span> <span class="ow">or</span> \
+                        <span class="p">(</span><span class="n">i1</span> <span class="o">==</span> <span class="n">i2</span> <span class="ow">and</span> <span class="n">k1</span> <span class="o">==</span> <span class="n">k2</span> <span class="ow">and</span> <span class="n">j1</span> <span class="o">!=</span> <span class="n">j2</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">process_lines</span><span class="p">(</span><span class="n">ib</span><span class="p">,</span> <span class="n">num_sn</span><span class="p">)</span>
+                <span class="c1"># Points</span>
+                <span class="k">elif</span> <span class="n">i1</span><span class="o">==</span><span class="n">i2</span> <span class="ow">and</span> <span class="n">j1</span><span class="o">==</span><span class="n">j2</span> <span class="ow">and</span> <span class="n">k1</span><span class="o">==</span><span class="n">k2</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">process_points</span><span class="p">(</span><span class="n">ib</span><span class="p">,</span> <span class="n">num_sn</span><span class="p">)</span>
+                <span class="c1"># Volumes</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">process_volumes</span><span class="p">(</span><span class="n">ib</span><span class="p">,</span> <span class="n">num_sn</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span></div>
+
+
+<div class="viewcode-block" id="ReadSnapshots.process_planes">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadSnapshots.process_planes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_planes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">snapshot_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Methods to process information of a plane and return a dictionary with the information.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        -----</span>
+<span class="sd">        block_id : int</span>
+<span class="sd">            block id in which the plane information are being processed.</span>
+<span class="sd">        snapshot_id : int</span>
+<span class="sd">            ID of the snapshot being processed, corresponds to its order in the param_blocks.ini .</span>
+<span class="sd">        self.info_plane : dict</span>
+<span class="sd">            Dictionary containing information about the planes.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Dictionary with the processed information of the plane.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s1">&#39;nb_p&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s2">&quot;nb_p&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;I2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I2&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;J2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J2&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;K2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K2&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">ivar</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;var&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ivar</span><span class="p">)]</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s2">&quot;list_var&quot;</span><span class="p">][</span><span class="n">ivar</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span> <span class="o">==</span> \
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I2&#39;</span><span class="p">]:</span>
+            <span class="c1"># Informatin about normal and height of the plane</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;normal&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;index&#39;</span><span class="p">]</span>   <span class="o">=</span>\
+                                <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span> <span class="o">==</span>\
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J2&#39;</span><span class="p">]:</span>
+            <span class="c1"># Informatin about normal and height of the plane</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;normal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span> <span class="o">==</span>\
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K2&#39;</span><span class="p">]:</span>
+            <span class="c1"># Informatin about normal and height of the plane</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;normal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ip</span><span class="p">][</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span></div>
+
+
+<div class="viewcode-block" id="ReadSnapshots.process_lines">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadSnapshots.process_lines">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">snapshot_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Methods to process information of a line and return a dictionary with the information.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        -----</span>
+<span class="sd">        block_id : int</span>
+<span class="sd">            block id in which the line information are being processed.</span>
+<span class="sd">        snapshot_id : int</span>
+<span class="sd">            ID of the snapshot being processed, corresponds to its order in the param_blocks.ini .</span>
+<span class="sd">        self.info_line : dict</span>
+<span class="sd">            Dictionary containing information about the lines.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Dictionary with the processed information of the line.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Similar to _process_planes, but for lines</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s1">&#39;nb_l&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">il</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s1">&#39;nb_l&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">][</span><span class="s1">&#39;I2&#39;</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I2&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">][</span><span class="s1">&#39;J2&#39;</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J2&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">][</span><span class="s1">&#39;K2&#39;</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K2&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">ivar</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">][</span><span class="s1">&#39;var&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">ivar</span><span class="p">)]</span> <span class="o">=</span>\
+                                <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s2">&quot;list_var&quot;</span><span class="p">][</span><span class="n">ivar</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span><span class="o">==</span>\
+                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I2&#39;</span><span class="p">]</span> <span class="ow">and</span>\
+                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span><span class="o">==</span>\
+                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J2&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">][</span><span class="s1">&#39;dir&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">3</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span><span class="o">==</span>\
+                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I2&#39;</span><span class="p">]</span> <span class="ow">and</span>\
+                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span><span class="o">==</span>\
+                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K2&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">][</span><span class="s1">&#39;dir&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">2</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span><span class="o">==</span>\
+                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J2&#39;</span><span class="p">]</span> <span class="ow">and</span>\
+                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span><span class="o">==</span>\
+                    <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K2&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">il</span><span class="p">][</span><span class="s1">&#39;dir&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span></div>
+
+
+<div class="viewcode-block" id="ReadSnapshots.process_points">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadSnapshots.process_points">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">snapshot_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process points information.</span>
+<span class="sd">        Similar to _process_planes, but for points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s1">&#39;nb_pt&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ipt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s1">&#39;nb_pt&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ipt</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ipt</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ipt</span><span class="p">][</span><span class="s1">&#39;I2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I2&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ipt</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ipt</span><span class="p">][</span><span class="s1">&#39;J2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J2&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ipt</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ipt</span><span class="p">][</span><span class="s1">&#39;K2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K2&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ipt</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">ipt</span><span class="p">][</span><span class="s1">&#39;var&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">var</span><span class="p">)]</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s2">&quot;list_var&quot;</span><span class="p">][</span><span class="n">var</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span></div>
+
+
+<div class="viewcode-block" id="ReadSnapshots.process_volumes">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadSnapshots.process_volumes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_volumes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">snapshot_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process volumes information.</span>
+<span class="sd">        Similar to _process_planes, but for volumes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s1">&#39;nb_v&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">iv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="s1">&#39;nb_v&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">iv</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">iv</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">iv</span><span class="p">][</span><span class="s1">&#39;I2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;I2&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">iv</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">iv</span><span class="p">][</span><span class="s1">&#39;J2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;J2&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">iv</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">iv</span><span class="p">][</span><span class="s1">&#39;K2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;K2&#39;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">iv</span><span class="p">][</span><span class="s1">&#39;var&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">var</span><span class="p">)]</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">snapshot_id</span><span class="p">][</span><span class="s1">&#39;var&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">var</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_volume</span></div>
+</div>
+
+
+<span class="c1"># ==========================</span>
+<span class="c1"># Class to read planes from binary files</span>
+<span class="c1"># ==========================</span>
+<div class="viewcode-block" id="ReadPlanes">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPlanes">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReadPlanes</span><span class="p">(</span><span class="n">ReadSnapshots</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to read planes from binary files.</span>
+
+<span class="sd">    This class is used by the ppModule to read planes from binary files. </span>
+<span class="sd">    It also provides a static method to read 2D binary data, which can be </span>
+<span class="sd">    used to read statistics or other related data.</span>
+
+<span class="sd">    Attrblock_idutes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dir : str</span>
+<span class="sd">        Directory where the binary files are located.</span>
+<span class="sd">    info : dict</span>
+<span class="sd">        Dictionary containing information from the `info.ini` file.</span>
+<span class="sd">    snapshots_info : dict</span>
+<span class="sd">        Dictionary containing information about the snapshots.</span>
+<span class="sd">    </span>
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    read_planes()</span>
+<span class="sd">        Read planes from binary files.</span>
+<span class="sd">    read_2d(filename, n1, n2, nvar)</span>
+<span class="sd">        Read 2D binary data in a block. Used to read planes, stats, etc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ReadPlanes.read_2d">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPlanes.read_2d">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_2d</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nvar</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read 2D binary data in a block. Used to read planes, stats, etc.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str</span>
+<span class="sd">            Name of the binary file.</span>
+<span class="sd">        n1 : int</span>
+<span class="sd">            Number of points in the first dimension.</span>
+<span class="sd">        n2 : int</span>
+<span class="sd">            Number of points in the second dimension.</span>
+<span class="sd">        nvar : int</span>
+<span class="sd">            Number of variables.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Dictionary with the data read from the binary file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;File </span><span class="si">%s</span><span class="s2"> not found.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error reading file </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nvar</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">while</span> <span class="n">ind</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nvar</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span>
+                        <span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;&lt;f8&#39;</span><span class="p">),</span> <span class="n">count</span><span class="o">=</span><span class="n">n1</span> <span class="o">*</span> <span class="n">n2</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+                <span class="n">ind</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="ReadPlanes.read_planes">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPlanes.read_planes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_planes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read planes from binary files.</span>
+
+<span class="sd">        The planes are returned in a dictionary organized as follows:</span>
+<span class="sd">        - planes[block_id][plane_id][&#39;var&#39;] = data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Dictionary with the planes read from the binary files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">planes</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">planes</span><span class="p">[</span><span class="n">block</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">plane_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;nb_p&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">planes</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">plane_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">plane_id</span><span class="p">][</span><span class="s1">&#39;normal&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">n1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;ny&quot;</span><span class="p">]</span>
+                    <span class="n">n2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nz&quot;</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">plane_id</span><span class="p">][</span><span class="s1">&#39;normal&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">n1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]</span>
+                    <span class="n">n2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nz&quot;</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">plane_id</span><span class="p">][</span><span class="s1">&#39;normal&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">n1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]</span>
+                    <span class="n">n2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;ny&quot;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error in the normal of the plane.&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+
+                <span class="n">nvar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_plane</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">plane_id</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">plane_id</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+                    <span class="n">filename</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;/plane_00&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">plane_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_bl&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.bin&#39;</span>
+                <span class="k">elif</span> <span class="n">plane_id</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+                    <span class="n">filename</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;/plane_0&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">plane_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_bl&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.bin&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error in the plane id.&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+
+                <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_2d</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">n1</span><span class="o">=</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="o">=</span><span class="n">n2</span><span class="p">,</span> <span class="n">nvar</span><span class="o">=</span><span class="n">nvar</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nvar</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">varname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">plane_id</span><span class="p">][</span><span class="s2">&quot;list_var&quot;</span><span class="p">][</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="n">planes</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">plane_id</span><span class="p">][</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s2">&quot;var&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Planes read from binary files.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">planes</span></div>
+</div>
+
+
+<span class="c1"># ==========================</span>
+<span class="c1"># Class to read lines from binary files</span>
+<div class="viewcode-block" id="ReadLines">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadLines">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReadLines</span><span class="p">(</span><span class="n">ReadSnapshots</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to read lines from binary files.</span>
+
+<span class="sd">    This class is used by the ppModule to read lines from binary files. </span>
+
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dir : str</span>
+<span class="sd">        Directory where the binary files are located.</span>
+<span class="sd">    info : dict</span>
+<span class="sd">        Dictionary containing information from the `info.ini` file.</span>
+<span class="sd">    snapshots_info : dict</span>
+<span class="sd">        Dictionary containing information about the snapshots.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    read_line()</span>
+<span class="sd">        Read lines from binary files.</span>
+<span class="sd">    read_line_block(filename, n1, nvar)</span>
+<span class="sd">        Read lines from binary files for one block, is called by the read_line method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ReadLines.read_lines">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadLines.read_lines">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read lines from binary files.</span>
+
+<span class="sd">        The lines are returned in a dictionary organized as follows:</span>
+<span class="sd">        - lines[block_id][line_id][&#39;var&#39;] = data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Dictionary with the lines read from the binary files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lines</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">lines</span><span class="p">[</span><span class="n">block</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">line_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;nb_l&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">lines</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">line_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">line_id</span><span class="p">][</span><span class="s1">&#39;dir&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">n1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">line_id</span><span class="p">][</span><span class="s1">&#39;dir&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">n1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;ny&quot;</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">line_id</span><span class="p">][</span><span class="s1">&#39;dir&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">n1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nz&quot;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error in the direction of the line.&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+
+                <span class="n">nvar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_line</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">line_id</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">line_id</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+                    <span class="n">filename</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;/line_00&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">line_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_bl&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.bin&#39;</span>
+                <span class="k">elif</span> <span class="n">line_id</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+                    <span class="n">filename</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;/line_0&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">line_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_bl&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.bin&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error in the line id.&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+
+                <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_line_block</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">n1</span><span class="o">=</span><span class="n">n1</span><span class="p">,</span> <span class="n">nvar</span><span class="o">=</span><span class="n">nvar</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nvar</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">varname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">line_id</span><span class="p">][</span><span class="s2">&quot;list_var&quot;</span><span class="p">][</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="n">lines</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">line_id</span><span class="p">][</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s2">&quot;var&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Lines read from binary files.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">lines</span></div>
+
+
+<div class="viewcode-block" id="ReadLines.read_line_block">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadLines.read_line_block">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_line_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nvar</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read lines from binary files for one block, is called by the read_line method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;File </span><span class="si">%s</span><span class="s2"> not found.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error reading file </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nvar</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">while</span> <span class="n">ind</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;&lt;f8&#39;</span><span class="p">),</span> <span class="n">count</span><span class="o">=</span><span class="n">n1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">1</span><span class="p">)][</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">nvar</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span>
+                        <span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;&lt;f8&#39;</span><span class="p">),</span> <span class="n">count</span><span class="o">=</span><span class="n">n1</span><span class="p">)</span>
+                <span class="n">ind</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+</div>
+
+
+<div class="viewcode-block" id="ReadPoints">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPoints">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReadPoints</span><span class="p">(</span><span class="n">ReadSnapshots</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to read points from binary files.</span>
+
+<span class="sd">    This class is used by the ppModule to read points from binary files. </span>
+
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dir : str</span>
+<span class="sd">        Directory where the binary files are located.</span>
+<span class="sd">    info : dict</span>
+<span class="sd">        Dictionary containing information from the `info.ini` file.</span>
+<span class="sd">    snapshots_info : dict</span>
+<span class="sd">        Dictionary containing information about the snapshots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ReadPoints.read_points">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPoints.read_points">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read points from binary files.</span>
+
+<span class="sd">        The points are returned in a dictionary organized as follows:</span>
+<span class="sd">        - points[block_id][point_id][&#39;var&#39;] = data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Dictionary with the points read from the binary files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">points</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;In read points&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">points</span><span class="p">[</span><span class="n">block</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">point_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="s2">&quot;nb_pt&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">points</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">point_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">nvar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_point</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">point_id</span><span class="p">][</span><span class="s1">&#39;nvar&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">point_id</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+                    <span class="n">filename</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;/point_00&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">point_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_bl&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.bin&#39;</span>
+                <span class="k">elif</span> <span class="n">point_id</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+                    <span class="n">filename</span> <span class="o">=</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;/point_0&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">point_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_bl&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.bin&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error in the point id filename.&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;About to read from file:&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_points_block</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">nvar</span><span class="o">=</span><span class="n">nvar</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nvar</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">varname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snapshots_info</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">point_id</span><span class="p">][</span><span class="s2">&quot;list_var&quot;</span><span class="p">][</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="n">points</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">point_id</span><span class="p">][</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s2">&quot;var&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+        <span class="c1"># Check if the points are read correctly</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Points read from binary files.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">points</span></div>
+
+
+<div class="viewcode-block" id="ReadPoints.read_points_block">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPoints.read_points_block">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_points_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nvar</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read points from binary files for one block, is called by the read_points method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reading file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;File </span><span class="si">%s</span><span class="s2"> not found.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error reading file </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nvar</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">while</span> <span class="n">ind</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nvar</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;&lt;f8&#39;</span><span class="p">),</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">ind</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
