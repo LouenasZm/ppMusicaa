@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usage Guide &mdash; ppMusicaa 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data Structures Reference" href="data_structures.html" />
+    <link rel="prev" title="Configuration Guide" href="configuration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ppMusicaa
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#configuration-structure">Configuration Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#required-keys">Required Keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#optional-keys">Optional Keys</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#configuration-examples">Configuration Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#basic-configuration">Basic Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#complete-configuration">Complete Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#configuration-for-different-grid-types">Configuration for Different Grid Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="configuration.html#d-curvilinear-grid-extruded">2D Curvilinear Grid (Extruded)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="configuration.html#d-curvilinear-grid">3D Curvilinear Grid</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#file-structure-requirements">File Structure Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#configuration-validation">Configuration Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#initialization">Initialization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-statistics">Working with Statistics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reading-statistics">Reading Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#computing-derived-quantities">Computing Derived Quantities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-snapshots">Working with Snapshots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#processing-plane-data">Processing Plane Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-line-data">Processing Line Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-point-data">Processing Point Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-usage">Advanced Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#working-with-multiple-variables">Working with Multiple Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#computing-statistics-and-fluctuations">Computing Statistics and Fluctuations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-tips">Performance Tips</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_structures.html">Data Structures Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#statistics-data-structure">Statistics Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#return-stats-output"><code class="docutils literal notranslate"><span class="pre">return_stats()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#computed-quantities-data-structure">Computed Quantities Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#compute-qty-output"><code class="docutils literal notranslate"><span class="pre">compute_qty()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#plane-data-structure">Plane Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#planes-output"><code class="docutils literal notranslate"><span class="pre">planes()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#line-data-structure">Line Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#lines-output"><code class="docutils literal notranslate"><span class="pre">lines()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#point-data-structure">Point Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#points-output"><code class="docutils literal notranslate"><span class="pre">points()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#grid-data-structure">Grid Data Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#common-array-shapes">Common Array Shapes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#d-curvilinear-grid">2D Curvilinear Grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#variable-naming-conventions">Variable Naming Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/ppModule.html">ppModule package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-interface">Main Interface Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#interface.PostProcessMusicaa"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/ppModule.html#module-ppModule.binFiles">ppModule.binFiles package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.binFiles.read_grid">ppModule.binFiles.read_grid module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#classes">Classes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.binFiles.read_grid.ReadGrid"><code class="docutils literal notranslate"><span class="pre">ReadGrid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.binFiles.read_snapshots">ppModule.binFiles.read_snapshots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#id1">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.binFiles.read_snapshots.ReadLines"><code class="docutils literal notranslate"><span class="pre">ReadLines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPlanes"><code class="docutils literal notranslate"><span class="pre">ReadPlanes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPoints"><code class="docutils literal notranslate"><span class="pre">ReadPoints</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.binFiles.read_snapshots.ReadSnapshots"><code class="docutils literal notranslate"><span class="pre">ReadSnapshots</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.binFiles.read_stats">ppModule.binFiles.read_stats module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.binFiles.read_stats.ReadStats"><code class="docutils literal notranslate"><span class="pre">ReadStats</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/ppModule.html#module-ppModule.compute">ppModule.compute package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#id9">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.compute.compute_2d_curv">ppModule.compute.compute_2d_curv module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv"><code class="docutils literal notranslate"><span class="pre">Compute2DCurv</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/ppModule.html#module-ppModule.iniFiles">ppModule.iniFiles package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#id10">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.iniFiles.read_ini">ppModule.iniFiles.read_ini module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#id13">Classes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.iniFiles.read_ini.FeosReader"><code class="docutils literal notranslate"><span class="pre">FeosReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.iniFiles.read_ini.InfoReader"><code class="docutils literal notranslate"><span class="pre">InfoReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.iniFiles.read_ini.ParamBlockReader"><code class="docutils literal notranslate"><span class="pre">ParamBlockReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.iniFiles.read_ini.Reader"><code class="docutils literal notranslate"><span class="pre">Reader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/ppModule.html#module-ppModule.utils">ppModule.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#id16">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.utils.preprocess_snapshots">ppModule.utils.preprocess_snapshots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.utils.preprocess_snapshots.PreProcessLines"><code class="docutils literal notranslate"><span class="pre">PreProcessLines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.utils.preprocess_snapshots.PreProcessPlanes"><code class="docutils literal notranslate"><span class="pre">PreProcessPlanes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.utils.preprocess_snapshots.PreprocessPoints"><code class="docutils literal notranslate"><span class="pre">PreprocessPoints</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.utils.stats_reader">ppModule.utils.stats_reader module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.utils.stats_reader.StatsReader"><code class="docutils literal notranslate"><span class="pre">StatsReader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/modules.html#module-interface">Main Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.config"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.snapshots_info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.snapshots_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.block_info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.block_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.compute"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.compute</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.compute_qty"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.compute_qty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.lines"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.lines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.planes"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.planes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.points"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.return_stats"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.return_stats()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ppMusicaa</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Usage Guide</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/LouenasZm/ppMusicaa/blob/Main/docs/source/usage.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="usage-guide">
+<h1>Usage Guide<a class="headerlink" href="#usage-guide" title="Link to this heading"></a></h1>
+<p>This guide provides examples of how to use the <code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code> interface for post-processing simulation data.</p>
+<section id="basic-usage">
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h2>
+<section id="initialization">
+<h3>Initialization<a class="headerlink" href="#initialization" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ppModule.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostProcessMusicaa</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;directory&quot;</span><span class="p">:</span> <span class="s2">&quot;/path/to/simulation/data&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;case&quot;</span><span class="p">:</span> <span class="s2">&quot;my_simulation_case&quot;</span>
+<span class="p">}</span>
+
+<span class="n">pp</span> <span class="o">=</span> <span class="n">PostProcessMusicaa</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="working-with-statistics">
+<h2>Working with Statistics<a class="headerlink" href="#working-with-statistics" title="Link to this heading"></a></h2>
+<section id="reading-statistics">
+<h3>Reading Statistics<a class="headerlink" href="#reading-statistics" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get all statistics</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">return_stats</span><span class="p">()</span>
+
+<span class="c1"># Stats structure: {&quot;block_id&quot;: {&quot;var1&quot;: value, &quot;var2&quot;: value, ...}}</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Available blocks: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Variables in block 1: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="computing-derived-quantities">
+<h3>Computing Derived Quantities<a class="headerlink" href="#computing-derived-quantities" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Available quantities: &#39;ufst&#39;, &#39;rhofst&#39;, &#39;d99&#39;, &#39;delta&#39;, &#39;theta&#39;, &#39;tauw&#39;</span>
+
+<span class="c1"># Boundary layer thickness</span>
+<span class="n">delta</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">compute_qty</span><span class="p">(</span><span class="s1">&#39;delta&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Boundary layer thickness: </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Wall shear stress</span>
+<span class="n">tauw</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">compute_qty</span><span class="p">(</span><span class="s1">&#39;tauw&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wall shear stress: </span><span class="si">{</span><span class="n">tauw</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Displacement thickness</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">compute_qty</span><span class="p">(</span><span class="s1">&#39;theta&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Momentum thickness: </span><span class="si">{</span><span class="n">theta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="working-with-snapshots">
+<h2>Working with Snapshots<a class="headerlink" href="#working-with-snapshots" title="Link to this heading"></a></h2>
+<section id="processing-plane-data">
+<h3>Processing Plane Data<a class="headerlink" href="#processing-plane-data" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get instantaneous plane data</span>
+<span class="n">planes</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">planes</span><span class="p">()</span>
+
+<span class="c1"># Get fluctuation data (requires statistics)</span>
+<span class="n">fluct_planes</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">planes</span><span class="p">(</span><span class="n">fluctuation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Plane data structure:</span>
+<span class="c1"># {</span>
+<span class="c1">#     &quot;block_id&quot;: {</span>
+<span class="c1">#         &quot;plane_id&quot;: {</span>
+<span class="c1">#             &quot;x1&quot;: array,  # x-coordinates</span>
+<span class="c1">#             &quot;x2&quot;: array,  # y-coordinates  </span>
+<span class="c1">#             &quot;fields&quot;: {</span>
+<span class="c1">#                 &quot;variable_name&quot;: {</span>
+<span class="c1">#                     1: snapshot_1_data,</span>
+<span class="c1">#                     2: snapshot_2_data,</span>
+<span class="c1">#                     ...</span>
+<span class="c1">#                 }</span>
+<span class="c1">#             }</span>
+<span class="c1">#         }</span>
+<span class="c1">#     }</span>
+<span class="c1"># }</span>
+
+<span class="c1"># Example: Plot a plane</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">block_id</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">plane_id</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">variable</span> <span class="o">=</span> <span class="s1">&#39;u&#39;</span>  <span class="c1"># velocity component</span>
+<span class="n">snapshot</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">plane_data</span> <span class="o">=</span> <span class="n">planes</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">plane_id</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">plane_data</span><span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">plane_data</span><span class="p">[</span><span class="s1">&#39;x2&#39;</span><span class="p">]</span> 
+<span class="n">field</span> <span class="o">=</span> <span class="n">plane_data</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">variable</span><span class="p">][</span><span class="n">snapshot</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">variable</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1"> field - Block </span><span class="si">{</span><span class="n">block_id</span><span class="si">}</span><span class="s1">, Plane </span><span class="si">{</span><span class="n">plane_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="processing-line-data">
+<h3>Processing Line Data<a class="headerlink" href="#processing-line-data" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get line data</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">lines</span><span class="p">()</span>
+
+<span class="c1"># Line data structure includes direction information:</span>
+<span class="c1"># {</span>
+<span class="c1">#     &quot;block_id&quot;: {</span>
+<span class="c1">#         &quot;line_id&quot;: {</span>
+<span class="c1">#             &quot;x1&quot;: array,</span>
+<span class="c1">#             &quot;x2&quot;: array,</span>
+<span class="c1">#             &quot;x3&quot;: array,</span>
+<span class="c1">#             &quot;dir&quot;: int,  # 1=x-direction, 2=y-direction, 3=z-direction</span>
+<span class="c1">#             &quot;fields&quot;: {</span>
+<span class="c1">#                 &quot;variable_name&quot;: {</span>
+<span class="c1">#                     1: snapshot_1_data,</span>
+<span class="c1">#                     ...</span>
+<span class="c1">#                 }</span>
+<span class="c1">#             }</span>
+<span class="c1">#         }</span>
+<span class="c1">#     }</span>
+<span class="c1"># }</span>
+
+<span class="c1"># Example: Plot line data</span>
+<span class="n">block_id</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">line_id</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">variable</span> <span class="o">=</span> <span class="s1">&#39;u&#39;</span>
+<span class="n">snapshot</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">line_data</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">line_id</span><span class="p">]</span>
+<span class="n">direction</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="s1">&#39;dir&#39;</span><span class="p">]</span>
+<span class="n">coord_names</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;z&#39;</span><span class="p">}</span>
+
+<span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">]</span>
+<span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="s1">&#39;x2&#39;</span><span class="p">]</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="s1">&#39;x3&#39;</span><span class="p">]</span>
+
+<span class="n">field</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">variable</span><span class="p">][</span><span class="n">snapshot</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">coord_names</span><span class="p">[</span><span class="n">direction</span><span class="p">]</span><span class="si">}</span><span class="s1"> coordinate&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1"> along line - Block </span><span class="si">{</span><span class="n">block_id</span><span class="si">}</span><span class="s1">, Line </span><span class="si">{</span><span class="n">line_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="processing-point-data">
+<h3>Processing Point Data<a class="headerlink" href="#processing-point-data" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get point data</span>
+<span class="n">points</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">points</span><span class="p">()</span>
+
+<span class="c1"># Point data structure:</span>
+<span class="c1"># {</span>
+<span class="c1">#     &quot;block_id&quot;: {</span>
+<span class="c1">#         &quot;point_id&quot;: {</span>
+<span class="c1">#             &quot;x1&quot;: value,  # x-coordinate</span>
+<span class="c1">#             &quot;x2&quot;: value,  # y-coordinate</span>
+<span class="c1">#             &quot;x3&quot;: value,  # z-coordinate</span>
+<span class="c1">#             &quot;fields&quot;: {</span>
+<span class="c1">#                 &quot;variable_name&quot;: {</span>
+<span class="c1">#                     1: snapshot_1_value,</span>
+<span class="c1">#                     2: snapshot_2_value,</span>
+<span class="c1">#                     ...</span>
+<span class="c1">#                 }</span>
+<span class="c1">#             }</span>
+<span class="c1">#         }</span>
+<span class="c1">#     }</span>
+<span class="c1"># }</span>
+
+<span class="c1"># Example: Time series at a point</span>
+<span class="n">block_id</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">point_id</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">variable</span> <span class="o">=</span> <span class="s1">&#39;p&#39;</span>  <span class="c1"># pressure</span>
+
+<span class="n">point_data</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">point_id</span><span class="p">]</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">point_data</span><span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">],</span> <span class="n">point_data</span><span class="p">[</span><span class="s1">&#39;x2&#39;</span><span class="p">],</span> <span class="n">point_data</span><span class="p">[</span><span class="s1">&#39;x3&#39;</span><span class="p">]</span>
+<span class="n">time_series</span> <span class="o">=</span> <span class="n">point_data</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">variable</span><span class="p">]</span>
+
+<span class="n">snapshots</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">time_series</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">time_series</span><span class="p">[</span><span class="n">snap</span><span class="p">]</span> <span class="k">for</span> <span class="n">snap</span> <span class="ow">in</span> <span class="n">snapshots</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">snapshots</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="s1">&#39;ro-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Snapshot&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1"> time series at point (</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">y</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">z</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="advanced-usage">
+<h2>Advanced Usage<a class="headerlink" href="#advanced-usage" title="Link to this heading"></a></h2>
+<section id="working-with-multiple-variables">
+<h3>Working with Multiple Variables<a class="headerlink" href="#working-with-multiple-variables" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Process multiple variables simultaneously</span>
+<span class="n">planes</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">planes</span><span class="p">()</span>
+<span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">]</span>  <span class="c1"># velocity components and pressure</span>
+
+<span class="n">block_id</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">plane_id</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">snapshot</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">variables</span><span class="p">):</span>
+    <span class="n">plane_data</span> <span class="o">=</span> <span class="n">planes</span><span class="p">[</span><span class="n">block_id</span><span class="p">][</span><span class="n">plane_id</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">plane_data</span><span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">plane_data</span><span class="p">[</span><span class="s1">&#39;x2&#39;</span><span class="p">]</span>
+    <span class="n">field</span> <span class="o">=</span> <span class="n">plane_data</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">var</span><span class="p">][</span><span class="n">snapshot</span><span class="p">]</span>
+    
+    <span class="n">im</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1"> field&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="computing-statistics-and-fluctuations">
+<h3>Computing Statistics and Fluctuations<a class="headerlink" href="#computing-statistics-and-fluctuations" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get both mean and fluctuation data</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">return_stats</span><span class="p">()</span>
+<span class="n">fluct_planes</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">planes</span><span class="p">(</span><span class="n">fluctuation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># The fluctuation data structure is the same as instantaneous data</span>
+<span class="c1"># but contains fluctuation fields (u&#39; = u - &lt;u&gt;)</span>
+</pre></div>
+</div>
+</section>
+<section id="error-handling">
+<h3>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Attempt to compute a quantity</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">compute_qty</span><span class="p">(</span><span class="s1">&#39;nonexistent_variable&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Quantity not available or not implemented&quot;</span><span class="p">)</span>
+        
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error computing quantity: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="performance-tips">
+<h2>Performance Tips<a class="headerlink" href="#performance-tips" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Cache data</strong>: The interface automatically caches read data, so multiple calls to the same method are efficient.</p></li>
+<li><p><strong>Read selectively</strong>: Only call the methods you need (planes, lines, points) to avoid unnecessary file I/O.</p></li>
+<li><p><strong>Use fluctuation=False</strong>: If you don’t need fluctuation data, avoid setting <code class="docutils literal notranslate"><span class="pre">fluctuation=True</span></code> as it requires additional computation.</p></li>
+<li><p><strong>Monitor memory</strong>: Large datasets can consume significant memory. Consider processing data in chunks for very large simulations.</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="configuration.html" class="btn btn-neutral float-left" title="Configuration Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="data_structures.html" class="btn btn-neutral float-right" title="Data Structures Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

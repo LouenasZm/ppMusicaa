@@ -1,0 +1,530 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ppModule.utils.stats_reader &mdash; ppMusicaa 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ppMusicaa
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#configuration-structure">Configuration Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#required-keys">Required Keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#optional-keys">Optional Keys</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#configuration-examples">Configuration Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#basic-configuration">Basic Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#complete-configuration">Complete Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../configuration.html#configuration-for-different-grid-types">Configuration for Different Grid Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../configuration.html#d-curvilinear-grid-extruded">2D Curvilinear Grid (Extruded)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../configuration.html#d-curvilinear-grid">3D Curvilinear Grid</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#file-structure-requirements">File Structure Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#configuration-validation">Configuration Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#basic-usage">Basic Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#initialization">Initialization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#working-with-statistics">Working with Statistics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#reading-statistics">Reading Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#computing-derived-quantities">Computing Derived Quantities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#working-with-snapshots">Working with Snapshots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#processing-plane-data">Processing Plane Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#processing-line-data">Processing Line Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#processing-point-data">Processing Point Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#advanced-usage">Advanced Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#working-with-multiple-variables">Working with Multiple Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#computing-statistics-and-fluctuations">Computing Statistics and Fluctuations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage.html#performance-tips">Performance Tips</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data_structures.html">Data Structures Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#statistics-data-structure">Statistics Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#return-stats-output"><code class="docutils literal notranslate"><span class="pre">return_stats()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#computed-quantities-data-structure">Computed Quantities Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#compute-qty-output"><code class="docutils literal notranslate"><span class="pre">compute_qty()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#plane-data-structure">Plane Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#planes-output"><code class="docutils literal notranslate"><span class="pre">planes()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#line-data-structure">Line Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#lines-output"><code class="docutils literal notranslate"><span class="pre">lines()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#point-data-structure">Point Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#points-output"><code class="docutils literal notranslate"><span class="pre">points()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#grid-data-structure">Grid Data Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures.html#common-array-shapes">Common Array Shapes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#d-curvilinear-grid">2D Curvilinear Grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../data_structures.html#variable-naming-conventions">Variable Naming Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html">ppModule package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-interface">Main Interface Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#interface.PostProcessMusicaa"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles">ppModule.binFiles package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles.read_grid">ppModule.binFiles.read_grid module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#classes">Classes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_grid.ReadGrid"><code class="docutils literal notranslate"><span class="pre">ReadGrid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles.read_snapshots">ppModule.binFiles.read_snapshots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#id1">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadLines"><code class="docutils literal notranslate"><span class="pre">ReadLines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPlanes"><code class="docutils literal notranslate"><span class="pre">ReadPlanes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPoints"><code class="docutils literal notranslate"><span class="pre">ReadPoints</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_snapshots.ReadSnapshots"><code class="docutils literal notranslate"><span class="pre">ReadSnapshots</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.binFiles.read_stats">ppModule.binFiles.read_stats module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.binFiles.read_stats.ReadStats"><code class="docutils literal notranslate"><span class="pre">ReadStats</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.compute">ppModule.compute package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#id9">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.compute.compute_2d_curv">ppModule.compute.compute_2d_curv module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv"><code class="docutils literal notranslate"><span class="pre">Compute2DCurv</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.iniFiles">ppModule.iniFiles package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#id10">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.iniFiles.read_ini">ppModule.iniFiles.read_ini module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#id13">Classes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.FeosReader"><code class="docutils literal notranslate"><span class="pre">FeosReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.InfoReader"><code class="docutils literal notranslate"><span class="pre">InfoReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.ParamBlockReader"><code class="docutils literal notranslate"><span class="pre">ParamBlockReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.iniFiles.read_ini.Reader"><code class="docutils literal notranslate"><span class="pre">Reader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.utils">ppModule.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#id16">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.utils.preprocess_snapshots">ppModule.utils.preprocess_snapshots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.preprocess_snapshots.PreProcessLines"><code class="docutils literal notranslate"><span class="pre">PreProcessLines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.preprocess_snapshots.PreProcessPlanes"><code class="docutils literal notranslate"><span class="pre">PreProcessPlanes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.preprocess_snapshots.PreprocessPoints"><code class="docutils literal notranslate"><span class="pre">PreprocessPoints</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ppModule.html#module-ppModule.utils.stats_reader">ppModule.utils.stats_reader module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/ppModule.html#ppModule.utils.stats_reader.StatsReader"><code class="docutils literal notranslate"><span class="pre">StatsReader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/modules.html#module-interface">Main Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.config"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.snapshots_info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.snapshots_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.block_info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.block_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.compute"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.compute</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.compute_qty"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.compute_qty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.lines"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.lines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.planes"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.planes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.points"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/modules.html#interface.PostProcessMusicaa.return_stats"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.return_stats()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ppMusicaa</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ppModule.utils.stats_reader</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ppModule.utils.stats_reader</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Utils file containts routines to read stats for different cases from Musicaa output files</span>
+<span class="sd">    The functions are called in read_stats module depending on the case.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ppModule.binFiles.read_snapshots</span><span class="w">   </span><span class="kn">import</span> <span class="n">ReadPlanes</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="StatsReader">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.utils.stats_reader.StatsReader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">StatsReader</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class containing static methods only to read statistic for different musicaa cases</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="StatsReader.stats_stbl">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.utils.stats_reader.StatsReader.stats_stbl">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stats_stbl</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to read stats of the stbl case. The stats are read from the file </span>
+<span class="sd">        stats_bl%{i}.bin files</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        directory: str</span>
+<span class="sd">            The directory where the stats files are located</span>
+<span class="sd">        kwargs: dict containing the following keys</span>
+<span class="sd">            nbloc: int  </span>
+<span class="sd">                The number of blocks in the simulation</span>
+<span class="sd">            nx: dict</span>
+<span class="sd">                The number of cells in x direction for each block</span>
+<span class="sd">            ny: dict</span>
+<span class="sd">                The number of cells in y direction for each block</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        _stats: dict</span>
+<span class="sd">            A dictionary containing the stats of the simulation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#</span>
+        <span class="n">_stats</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">_stats</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Reading of the stats</span>
+        <span class="c1"># --------------------</span>
+        <span class="c1"># Reading of _stats1_bl.bin</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">nx</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]</span>
+            <span class="n">ny</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;ny&quot;</span><span class="p">]</span>
+            <span class="n">file_stats1</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;/stats1_bl&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.bin&#39;</span>
+            <span class="n">plane</span> <span class="o">=</span> <span class="n">ReadPlanes</span><span class="o">.</span><span class="n">read_2d</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">file_stats1</span><span class="p">,</span> <span class="n">n1</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">n2</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">nvar</span><span class="o">=</span><span class="mi">23</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">plane</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span>
+                    <span class="s1">&#39;rho&#39;</span><span class="p">,</span> <span class="s1">&#39;uu&#39;</span><span class="p">,</span> <span class="s1">&#39;vv&#39;</span><span class="p">,</span> <span class="s1">&#39;ww&#39;</span><span class="p">,</span> <span class="s1">&#39;prs&#39;</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;rhou&#39;</span><span class="p">,</span> <span class="s1">&#39;rhov&#39;</span><span class="p">,</span> <span class="s1">&#39;rhow&#39;</span><span class="p">,</span> <span class="s1">&#39;rhoe&#39;</span><span class="p">,</span> <span class="s1">&#39;rho^2&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;u2&#39;</span><span class="p">,</span> <span class="s1">&#39;v2&#39;</span><span class="p">,</span> <span class="s1">&#39;w2&#39;</span><span class="p">,</span> <span class="s1">&#39;uv&#39;</span><span class="p">,</span> <span class="s1">&#39;uw&#39;</span><span class="p">,</span> <span class="s1">&#39;vw&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;vT&#39;</span><span class="p">,</span> <span class="s1">&#39;p2&#39;</span><span class="p">,</span> <span class="s1">&#39;T2&#39;</span><span class="p">,</span> <span class="s1">&#39;mu&#39;</span><span class="p">,</span> <span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="s1">&#39;div^2&#39;</span>
+                <span class="p">]):</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">plane</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;var</span><span class="si">{</span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+                    <span class="c1"># Check if data contains field or not</span>
+                    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">_stats</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> \
+                                                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">value</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Reading of stats2_bl.bin</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">nx</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]</span>
+            <span class="n">ny</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;ny&quot;</span><span class="p">]</span>
+            <span class="n">file_stats2</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;/stats2_bl&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.bin&#39;</span>
+            <span class="n">plane</span> <span class="o">=</span> <span class="n">ReadPlanes</span><span class="o">.</span><span class="n">read_2d</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">file_stats2</span><span class="p">,</span> <span class="n">n1</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">n2</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">nvar</span><span class="o">=</span><span class="mi">144</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">plane</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span>
+                    <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="s1">&#39;kt&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;la&#39;</span><span class="p">,</span> <span class="s1">&#39;cp&#39;</span><span class="p">,</span> <span class="s1">&#39;cv&#39;</span><span class="p">,</span><span class="s1">&#39;pr&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;eck&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*dux&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*duy&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*duz&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*dvx&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*dvy&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*dvz&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;rho*dwx&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*dwy&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*dwz&#39;</span><span class="p">,</span> <span class="s1">&#39;p*div&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*div&#39;</span><span class="p">,</span> <span class="s1">&#39;b1&#39;</span><span class="p">,</span> <span class="s1">&#39;b2&#39;</span><span class="p">,</span> <span class="s1">&#39;b3&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*T&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;u*T&#39;</span><span class="p">,</span> <span class="s1">&#39;v*T&#39;</span><span class="p">,</span> <span class="s1">&#39;e^2&#39;</span><span class="p">,</span> <span class="s1">&#39;h^2&#39;</span><span class="p">,</span> <span class="s1">&#39;c^2&#39;</span><span class="p">,</span> <span class="s1">&#39;s^2&#39;</span><span class="p">,</span> <span class="s1">&#39;Mt^2&#39;</span><span class="p">,</span> <span class="s1">&#39;g^2&#39;</span><span class="p">,</span> <span class="s1">&#39;mu^2&#39;</span><span class="p">,</span><span class="s1">&#39;la^2&#39;</span><span class="p">,</span> <span class="s1">&#39;cv^2&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;cp^2&#39;</span><span class="p">,</span> <span class="s1">&#39;pr^2&#39;</span><span class="p">,</span> <span class="s1">&#39;eck^2&#39;</span><span class="p">,</span> <span class="s1">&#39;p*u&#39;</span><span class="p">,</span> <span class="s1">&#39;p*v&#39;</span><span class="p">,</span> <span class="s1">&#39;s*u&#39;</span><span class="p">,</span> <span class="s1">&#39;s*v&#39;</span><span class="p">,</span> <span class="s1">&#39;p*rho&#39;</span><span class="p">,</span> <span class="s1">&#39;h*rho&#39;</span><span class="p">,</span> <span class="s1">&#39;T*p&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;p*s&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;T*s&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*s&#39;</span><span class="p">,</span> <span class="s1">&#39;g*rho&#39;</span><span class="p">,</span> <span class="s1">&#39;g*p&#39;</span><span class="p">,</span> <span class="s1">&#39;g*s&#39;</span><span class="p">,</span> <span class="s1">&#39;g*T&#39;</span><span class="p">,</span> <span class="s1">&#39;g*u&#39;</span><span class="p">,</span> <span class="s1">&#39;g*v&#39;</span><span class="p">,</span> <span class="s1">&#39;p*dux&#39;</span><span class="p">,</span> <span class="s1">&#39;p*dvy&#39;</span><span class="p">,</span> 
+                    <span class="s1">&#39;p*dwz&#39;</span><span class="p">,</span> <span class="s1">&#39;p*duy&#39;</span><span class="p">,</span> <span class="s1">&#39;p*dvx&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*div^2&#39;</span><span class="p">,</span><span class="s1">&#39;dux^2&#39;</span><span class="p">,</span><span class="s1">&#39;duy^2&#39;</span><span class="p">,</span><span class="s1">&#39;duz^2&#39;</span><span class="p">,</span><span class="s1">&#39;dvx^2&#39;</span><span class="p">,</span><span class="s1">&#39;dvy^2&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;dvz^2&#39;</span><span class="p">,</span><span class="s1">&#39;dwx^2&#39;</span><span class="p">,</span><span class="s1">&#39;dwy^2&#39;</span><span class="p">,</span><span class="s1">&#39;dwz^2&#39;</span><span class="p">,</span><span class="s1">&#39;b1^2&#39;</span><span class="p">,</span><span class="s1">&#39;b2^2&#39;</span><span class="p">,</span><span class="s1">&#39;b3^2&#39;</span><span class="p">,</span><span class="s1">&#39;rho*b1&#39;</span><span class="p">,</span><span class="s1">&#39;rho*b2&#39;</span><span class="p">,</span><span class="s1">&#39;rho*b3&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;rho*u^2&#39;</span><span class="p">,</span><span class="s1">&#39;rho*v^2&#39;</span><span class="p">,</span><span class="s1">&#39;rho*w^2&#39;</span><span class="p">,</span><span class="s1">&#39;rho*T^2&#39;</span><span class="p">,</span><span class="s1">&#39;rho*b1^2&#39;</span><span class="p">,</span><span class="s1">&#39;rho*b2^2&#39;</span><span class="p">,</span><span class="s1">&#39;rho*b3^2&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;rho*u*v&#39;</span><span class="p">,</span> <span class="s1">&#39;rho*u*w&#39;</span><span class="p">,</span><span class="s1">&#39;rho*v*w&#39;</span><span class="p">,</span> 
+                    <span class="s1">&#39;rho*v*T&#39;</span><span class="p">,</span><span class="s1">&#39;rho*u^2*v&#39;</span><span class="p">,</span><span class="s1">&#39;rho*v^2*v&#39;</span><span class="p">,</span><span class="s1">&#39;rho*w^2*v&#39;</span><span class="p">,</span><span class="s1">&#39;rho*v^2*u&#39;</span><span class="p">,</span><span class="s1">&#39;rho*dux^2&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;rho*dvy^2&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;rho*dwz^2&#39;</span><span class="p">,</span><span class="s1">&#39;rho*duy*dvx&#39;</span><span class="p">,</span><span class="s1">&#39;rho*duz*dwx&#39;</span><span class="p">,</span><span class="s1">&#39;rho*dvz*dwy&#39;</span><span class="p">,</span><span class="s1">&#39;u^3&#39;</span><span class="p">,</span><span class="s1">&#39;p^3&#39;</span><span class="p">,</span><span class="s1">&#39;u^4&#39;</span><span class="p">,</span><span class="s1">&#39;p^4&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Frhou&#39;</span><span class="p">,</span><span class="s1">&#39;Frhov&#39;</span><span class="p">,</span><span class="s1">&#39;Frhow&#39;</span><span class="p">,</span><span class="s1">&#39;Grhov&#39;</span><span class="p">,</span><span class="s1">&#39;Grhow&#39;</span><span class="p">,</span><span class="s1">&#39;Hrhow&#39;</span><span class="p">,</span><span class="s1">&#39;Frhov*u&#39;</span><span class="p">,</span><span class="s1">&#39;Frhou*u&#39;</span><span class="p">,</span><span class="s1">&#39;Frhov*v&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Frhow*w&#39;</span><span class="p">,</span><span class="s1">&#39;Grhov*u&#39;</span><span class="p">,</span><span class="s1">&#39;Grhov*v&#39;</span><span class="p">,</span><span class="s1">&#39;Grhow*w&#39;</span><span class="p">,</span><span class="s1">&#39;Frhou*dux&#39;</span><span class="p">,</span><span class="s1">&#39;Frhou*dvx&#39;</span><span class="p">,</span><span class="s1">&#39;Frhov*dux&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Frhov*duy&#39;</span><span class="p">,</span><span class="s1">&#39;Frhov*dvx&#39;</span><span class="p">,</span><span class="s1">&#39;Frhov*dvy&#39;</span><span class="p">,</span><span class="s1">&#39;Frhow*duz&#39;</span><span class="p">,</span><span class="s1">&#39;Frhow*dvz&#39;</span><span class="p">,</span><span class="s1">&#39;Frhow*dwx&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Grhov*duy&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Grhov*dvy&#39;</span><span class="p">,</span><span class="s1">&#39;Grhow*duz&#39;</span><span class="p">,</span><span class="s1">&#39;Grhow*dvz&#39;</span><span class="p">,</span><span class="s1">&#39;Grhow*dwy&#39;</span><span class="p">,</span><span class="s1">&#39;Hrhow*dwz&#39;</span><span class="p">,</span><span class="s1">&#39;la*dTx&#39;</span><span class="p">,</span><span class="s1">&#39;la*dTy&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;la*dTz&#39;</span>
+                <span class="p">]):</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;var</span><span class="si">{</span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span><span class="p">:</span>
+                        <span class="n">_stats</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> \
+                                                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">value</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Done reading stats STBL from stats_bl(i).bin files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_stats</span></div>
+
+
+<div class="viewcode-block" id="StatsReader.stats_chan">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.utils.stats_reader.StatsReader.stats_chan">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stats_chan</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to read stats of the channel flow case. The stats are read from the stats.dat file</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        directory: str</span>
+<span class="sd">            The directory where the stats files are located</span>
+<span class="sd">        kwargs: dict containing the following keys </span>
+<span class="sd">            None</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        _stats: dict</span>
+<span class="sd">            A dictionary containing the stats of the simulation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Info should be None to read channel flow stats, is used only to &quot;</span> \
+                            <span class="s2">&quot;ensure conssitency in methods calling in ReadStats class&quot;</span><span class="p">)</span>
+        <span class="n">file_input</span>  <span class="o">=</span> <span class="n">directory</span><span class="o">+</span><span class="s2">&quot;/stats.dat&quot;</span>
+        <span class="n">stats</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;y_h&#39;</span><span class="p">:[],</span><span class="s1">&#39;rho&#39;</span><span class="p">:[],</span><span class="s1">&#39;u&#39;</span><span class="p">:[],</span><span class="s1">&#39;v&#39;</span><span class="p">:[],</span><span class="s1">&#39;w&#39;</span><span class="p">:[],</span><span class="s1">&#39;p&#39;</span><span class="p">:[],</span><span class="s1">&#39;T&#39;</span><span class="p">:[],</span>\
+                 <span class="s1">&#39;e&#39;</span><span class="p">:[],</span><span class="s1">&#39;h&#39;</span><span class="p">:[],</span><span class="s1">&#39;c&#39;</span><span class="p">:[],</span><span class="s1">&#39;s&#39;</span><span class="p">:[],</span><span class="s1">&#39;Mt&#39;</span><span class="p">:[],</span><span class="s1">&#39;0.5*q&#39;</span><span class="p">:[],</span>
+                 <span class="s1">&#39;u2&#39;</span><span class="p">:[],</span><span class="s1">&#39;v2&#39;</span><span class="p">:[],</span><span class="s1">&#39;w2&#39;</span><span class="p">:[],</span><span class="s1">&#39;rho*dux&#39;</span><span class="p">:[],</span><span class="s1">&#39;rho*duy&#39;</span><span class="p">:[],</span>
+                 <span class="s1">&#39;rho*duz&#39;</span><span class="p">:[],</span><span class="s1">&#39;rho*dvx&#39;</span><span class="p">:[],</span><span class="s1">&#39;rho*dvy&#39;</span><span class="p">:[],</span><span class="s1">&#39;rho*dvz&#39;</span><span class="p">:[],</span>
+                 <span class="s1">&#39;rho*dwx&#39;</span><span class="p">:[],</span><span class="s1">&#39;rho*dwy&#39;</span><span class="p">:[],</span><span class="s1">&#39;rho*dwz&#39;</span><span class="p">:[],</span><span class="s1">&#39;mu&#39;</span><span class="p">:[],</span><span class="s1">&#39;p2&#39;</span><span class="p">:[],</span>
+                 <span class="s1">&#39;uv&#39;</span><span class="p">:[],</span><span class="s1">&#39;dux2&#39;</span><span class="p">:[],</span><span class="s1">&#39;duy2&#39;</span><span class="p">:[],</span><span class="s1">&#39;duz2&#39;</span><span class="p">:[],</span><span class="s1">&#39;dvx2&#39;</span><span class="p">:[],</span><span class="s1">&#39;dvy2&#39;</span><span class="p">:[],</span>
+                 <span class="s1">&#39;dvz2&#39;</span><span class="p">:[],</span><span class="s1">&#39;dwx2&#39;</span><span class="p">:[],</span><span class="s1">&#39;dwy2&#39;</span><span class="p">:[],</span><span class="s1">&#39;dwz2&#39;</span><span class="p">:[]}</span>
+                 <span class="c1"># &#39;&#39;:[],&#39;&#39;:[],&#39;&#39;:[],&#39;&#39;:[],&#39;&#39;:[],&#39;&#39;:[],&#39;&#39;:[],&#39;&#39;:[]\</span>
+                 <span class="c1"># &#39;&#39;:[],&#39;&#39;:[],&#39;&#39;:[],&#39;&#39;:[],&#39;&#39;:[],&#39;&#39;:[],&#39;&#39;:[],&#39;&#39;:[]\</span>
+        <span class="c1"># Reading of the stats</span>
+        <span class="c1"># --------------------</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_input</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+            <span class="n">save</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;y_h&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;rho&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;uu&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;vv&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;ww&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;prs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">6</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;e&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">7</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">8</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">9</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;s&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">10</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;Mt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">11</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;0.5*q&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">12</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;mu&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">14</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;rho*dux&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">21</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;rho*duy&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">22</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;rho*duz&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">23</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;rho*dvx&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">24</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;rho*dvy&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">25</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;rho*dvz&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">26</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;rho*dwx&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">27</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;rho*dwy&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">28</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;rho*dwz&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">29</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;u2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">43</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;v2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">44</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;w2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">45</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;uv&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">46</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;p2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">50</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;dux2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">90</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;duy2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">91</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;duz2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">92</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;dvx2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">90</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;dvy2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">91</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;dvz2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">92</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;dwx2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">90</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;dwy2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">91</span><span class="p">]))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;dwz2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">save</span><span class="p">[</span><span class="mi">92</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">stats</span></div>
+
+
+<div class="viewcode-block" id="StatsReader.stats_turb">
+<a class="viewcode-back" href="../../../api/ppModule.html#ppModule.utils.stats_reader.StatsReader.stats_turb">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stats_turb</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to read stats of the turb case. The stats are read from the file </span>
+<span class="sd">        stats_bl%{i}.bin files</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">        directory: str</span>
+<span class="sd">            The directory where the stats files are located</span>
+<span class="sd">        kwargs: dict containing the following keys</span>
+<span class="sd">            nbloc: int  </span>
+<span class="sd">                The number of blocks in the simulation</span>
+<span class="sd">            nx: dict</span>
+<span class="sd">                The number of cells in x direction for each block</span>
+<span class="sd">            ny: dict</span>
+<span class="sd">                The number of cells in y direction for each block</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        _stats: dict</span>
+<span class="sd">            A dictionary containing the stats of the simulation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#</span>
+        <span class="n">_stats</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">_stats</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Reading of the stats</span>
+        <span class="c1"># --------------------</span>
+        <span class="c1"># Reading of _stats1_bl.bin</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">nx</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]</span>
+            <span class="n">ny</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;ny&quot;</span><span class="p">]</span>
+            <span class="n">file_stats1</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;/stats1_bl&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.bin&#39;</span>
+            <span class="n">plane</span> <span class="o">=</span> <span class="n">ReadPlanes</span><span class="o">.</span><span class="n">read_2d</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">file_stats1</span><span class="p">,</span> <span class="n">n1</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">n2</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">nvar</span><span class="o">=</span><span class="mi">23</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">plane</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span>
+                    <span class="s1">&#39;rho&#39;</span><span class="p">,</span> <span class="s1">&#39;uu&#39;</span><span class="p">,</span> <span class="s1">&#39;vv&#39;</span><span class="p">,</span> <span class="s1">&#39;ww&#39;</span><span class="p">,</span> <span class="s1">&#39;prs&#39;</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;rhou&#39;</span><span class="p">,</span> <span class="s1">&#39;rhov&#39;</span><span class="p">,</span> <span class="s1">&#39;rhow&#39;</span><span class="p">,</span> <span class="s1">&#39;rhoe&#39;</span><span class="p">,</span> <span class="s1">&#39;rho^2&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;u2&#39;</span><span class="p">,</span> <span class="s1">&#39;v2&#39;</span><span class="p">,</span> <span class="s1">&#39;w2&#39;</span><span class="p">,</span> <span class="s1">&#39;uv&#39;</span><span class="p">,</span> <span class="s1">&#39;uw&#39;</span><span class="p">,</span> <span class="s1">&#39;vw&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;vT&#39;</span><span class="p">,</span> <span class="s1">&#39;p2&#39;</span><span class="p">,</span> <span class="s1">&#39;T2&#39;</span><span class="p">,</span> <span class="s1">&#39;mu&#39;</span><span class="p">,</span> <span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="s1">&#39;div^2&#39;</span>
+                <span class="p">]):</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">plane</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;var</span><span class="si">{</span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+                    <span class="c1"># Check if data contains field or not</span>
+                    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">_stats</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> \
+                                                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">value</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Reading of stats2_bl.bin</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;nbloc&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">nx</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]</span>
+            <span class="n">ny</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;block </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="s2">&quot;nx&quot;</span><span class="p">]</span>
+            <span class="n">file_stats2</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;/stats2_bl&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.bin&#39;</span>
+            <span class="n">plane</span> <span class="o">=</span> <span class="n">ReadPlanes</span><span class="o">.</span><span class="n">read_2d</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">file_stats2</span><span class="p">,</span> <span class="n">n1</span><span class="o">=</span><span class="n">nx</span><span class="p">,</span> <span class="n">n2</span><span class="o">=</span><span class="n">ny</span><span class="p">,</span> <span class="n">nvar</span><span class="o">=</span><span class="mi">144</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">plane</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span>
+                    <span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;0.5*q&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;la&quot;</span><span class="p">,</span> <span class="s2">&quot;cp&quot;</span><span class="p">,</span> <span class="s2">&quot;cv&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;prr&quot;</span><span class="p">,</span> <span class="s2">&quot;eck&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*dux&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*duy&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*duz&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*dvx&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*dvy&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;rho*dvz&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*dwx&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*dwy&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*dwz&quot;</span><span class="p">,</span> <span class="s2">&quot;p*div&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*div&quot;</span><span class="p">,</span> <span class="s2">&quot;b1&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;b2&quot;</span><span class="p">,</span> <span class="s2">&quot;b3&quot;</span><span class="p">,</span> <span class="s2">&quot;rhoT&quot;</span><span class="p">,</span> <span class="s2">&quot;uT&quot;</span><span class="p">,</span> <span class="s2">&quot;vT&quot;</span><span class="p">,</span> <span class="s2">&quot;e**2&quot;</span><span class="p">,</span> <span class="s2">&quot;h**2&quot;</span><span class="p">,</span> <span class="s2">&quot;c**2&quot;</span><span class="p">,</span> <span class="s2">&quot;s**2&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;qq/cc2&quot;</span><span class="p">,</span> <span class="s2">&quot;g**2&quot;</span><span class="p">,</span> <span class="s2">&quot;mu**2&quot;</span><span class="p">,</span> <span class="s2">&quot;la**2&quot;</span><span class="p">,</span> <span class="s2">&quot;cv**2&quot;</span><span class="p">,</span> <span class="s2">&quot;cp**2&quot;</span><span class="p">,</span> <span class="s2">&quot;prr**2&quot;</span><span class="p">,</span> <span class="s2">&quot;eck**2&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;p*u&quot;</span><span class="p">,</span> <span class="s2">&quot;p*v&quot;</span><span class="p">,</span> <span class="s2">&quot;s*u&quot;</span><span class="p">,</span> <span class="s2">&quot;s*v&quot;</span><span class="p">,</span> <span class="s2">&quot;p*rho&quot;</span><span class="p">,</span> <span class="s2">&quot;h*rho&quot;</span><span class="p">,</span> <span class="s2">&quot;T*p&quot;</span><span class="p">,</span> <span class="s2">&quot;p*s&quot;</span><span class="p">,</span> <span class="s2">&quot;T*s&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*s&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;g*rho&quot;</span><span class="p">,</span> <span class="s2">&quot;g*p&quot;</span><span class="p">,</span> <span class="s2">&quot;g*s&quot;</span><span class="p">,</span> <span class="s2">&quot;g*T&quot;</span><span class="p">,</span> <span class="s2">&quot;g*u&quot;</span><span class="p">,</span> <span class="s2">&quot;g*v&quot;</span><span class="p">,</span> <span class="s2">&quot;p*dux&quot;</span><span class="p">,</span> <span class="s2">&quot;p*dvy&quot;</span><span class="p">,</span> <span class="s2">&quot;p*dwz&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;p*duy&quot;</span><span class="p">,</span> <span class="s2">&quot;p*dvx&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*div**2&quot;</span><span class="p">,</span> <span class="s2">&quot;dux**2&quot;</span><span class="p">,</span> <span class="s2">&quot;duy**2&quot;</span><span class="p">,</span> <span class="s2">&quot;duz**2&quot;</span><span class="p">,</span> <span class="s2">&quot;dvx**2&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;dvy**2&quot;</span><span class="p">,</span> <span class="s2">&quot;dvz**2&quot;</span><span class="p">,</span> <span class="s2">&quot;dwx**2&quot;</span><span class="p">,</span> <span class="s2">&quot;dwy**2&quot;</span><span class="p">,</span> <span class="s2">&quot;dwz**2&quot;</span><span class="p">,</span> <span class="s2">&quot;b1**2&quot;</span><span class="p">,</span> <span class="s2">&quot;b2**2&quot;</span><span class="p">,</span> <span class="s2">&quot;b3**2&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;rho*b1&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*b2&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*b3&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*uu&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*vv&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*ww&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;rho*T**2&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*b1**2&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*b2**2&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*b3**2&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*uv&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*uw&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;rho*vw&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*vT&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*u**2*v&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*v**3&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*w**2*v&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*v**2*u&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;rho*dux**2&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*dvy**2&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*dwz**2&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*duy*dvx&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*duz*dwx&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;rho*dvz*dwy&quot;</span><span class="p">,</span> <span class="s2">&quot;u**3&quot;</span><span class="p">,</span> <span class="s2">&quot;p**3&quot;</span><span class="p">,</span> <span class="s2">&quot;u**4&quot;</span><span class="p">,</span> <span class="s2">&quot;p**4&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhou&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhov&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhow&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Grhov&quot;</span><span class="p">,</span> <span class="s2">&quot;Grhow&quot;</span><span class="p">,</span> <span class="s2">&quot;Hrhow&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhovu&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhouu&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhovv&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhoww&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Grhovu&quot;</span><span class="p">,</span> <span class="s2">&quot;Grhovv&quot;</span><span class="p">,</span> <span class="s2">&quot;Grhoww&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhou_dux&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhou_dvx&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhov_dux&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Frhov_duy&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhov_dvx&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhov_dvy&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhow_duz&quot;</span><span class="p">,</span> <span class="s2">&quot;Frhow_dvz&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Frhow_dwx&quot;</span><span class="p">,</span> <span class="s2">&quot;Grhov_duy&quot;</span><span class="p">,</span> <span class="s2">&quot;Grhov_dvy&quot;</span><span class="p">,</span> <span class="s2">&quot;Grhow_duz&quot;</span><span class="p">,</span> <span class="s2">&quot;Grhow_dvz&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Grhow_dwy&quot;</span><span class="p">,</span> <span class="s2">&quot;Hrhow_dwz&quot;</span><span class="p">,</span> <span class="s2">&quot;la*dTx&quot;</span><span class="p">,</span> <span class="s2">&quot;la*dTy&quot;</span><span class="p">,</span> <span class="s2">&quot;la*dTz&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;h*u&quot;</span><span class="p">,</span> <span class="s2">&quot;h*v&quot;</span><span class="p">,</span> <span class="s2">&quot;h*w&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*h*u&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*h*v&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*h*w&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*u**3&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;rho*v**3&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*w**3&quot;</span><span class="p">,</span> <span class="s2">&quot;rho*w**2*u&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;h0&quot;</span><span class="p">,</span> <span class="s2">&quot;e0&quot;</span><span class="p">,</span> <span class="s2">&quot;s0&quot;</span><span class="p">,</span> <span class="s2">&quot;T0&quot;</span><span class="p">,</span> <span class="s2">&quot;p0&quot;</span><span class="p">,</span> <span class="s2">&quot;rho0&quot;</span><span class="p">,</span> <span class="s2">&quot;mut&quot;</span>
+                <span class="p">]):</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;var</span><span class="si">{</span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span><span class="p">:</span>
+                        <span class="n">_stats</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> \
+                                                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">value</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Done reading stats TURB from stats_bl(i).bin files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_stats</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

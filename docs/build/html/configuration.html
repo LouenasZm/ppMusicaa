@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration Guide &mdash; ppMusicaa 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage Guide" href="usage.html" />
+    <link rel="prev" title="ppMusicaa Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ppMusicaa
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-structure">Configuration Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#required-keys">Required Keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-keys">Optional Keys</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-examples">Configuration Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-configuration">Basic Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#complete-configuration">Complete Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-for-different-grid-types">Configuration for Different Grid Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#d-curvilinear-grid-extruded">2D Curvilinear Grid (Extruded)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#d-curvilinear-grid">3D Curvilinear Grid</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#file-structure-requirements">File Structure Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-validation">Configuration Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#basic-usage">Basic Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#initialization">Initialization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#working-with-statistics">Working with Statistics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#reading-statistics">Reading Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#computing-derived-quantities">Computing Derived Quantities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#working-with-snapshots">Working with Snapshots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#processing-plane-data">Processing Plane Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#processing-line-data">Processing Line Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#processing-point-data">Processing Point Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#advanced-usage">Advanced Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#working-with-multiple-variables">Working with Multiple Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#computing-statistics-and-fluctuations">Computing Statistics and Fluctuations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#performance-tips">Performance Tips</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_structures.html">Data Structures Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#statistics-data-structure">Statistics Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#return-stats-output"><code class="docutils literal notranslate"><span class="pre">return_stats()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#computed-quantities-data-structure">Computed Quantities Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#compute-qty-output"><code class="docutils literal notranslate"><span class="pre">compute_qty()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#plane-data-structure">Plane Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#planes-output"><code class="docutils literal notranslate"><span class="pre">planes()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#line-data-structure">Line Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#lines-output"><code class="docutils literal notranslate"><span class="pre">lines()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#point-data-structure">Point Data Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#points-output"><code class="docutils literal notranslate"><span class="pre">points()</span></code> Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#grid-data-structure">Grid Data Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html#common-array-shapes">Common Array Shapes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#d-curvilinear-grid">2D Curvilinear Grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_structures.html#variable-naming-conventions">Variable Naming Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/ppModule.html">ppModule package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-interface">Main Interface Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#interface.PostProcessMusicaa"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/ppModule.html#module-ppModule.binFiles">ppModule.binFiles package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.binFiles.read_grid">ppModule.binFiles.read_grid module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#classes">Classes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.binFiles.read_grid.ReadGrid"><code class="docutils literal notranslate"><span class="pre">ReadGrid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.binFiles.read_snapshots">ppModule.binFiles.read_snapshots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#id1">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.binFiles.read_snapshots.ReadLines"><code class="docutils literal notranslate"><span class="pre">ReadLines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPlanes"><code class="docutils literal notranslate"><span class="pre">ReadPlanes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.binFiles.read_snapshots.ReadPoints"><code class="docutils literal notranslate"><span class="pre">ReadPoints</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.binFiles.read_snapshots.ReadSnapshots"><code class="docutils literal notranslate"><span class="pre">ReadSnapshots</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.binFiles.read_stats">ppModule.binFiles.read_stats module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.binFiles.read_stats.ReadStats"><code class="docutils literal notranslate"><span class="pre">ReadStats</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/ppModule.html#module-ppModule.compute">ppModule.compute package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#id9">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.compute.compute_2d_curv">ppModule.compute.compute_2d_curv module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.compute.compute_2d_curv.Compute2DCurv"><code class="docutils literal notranslate"><span class="pre">Compute2DCurv</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/ppModule.html#module-ppModule.iniFiles">ppModule.iniFiles package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#id10">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.iniFiles.read_ini">ppModule.iniFiles.read_ini module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#id13">Classes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.iniFiles.read_ini.FeosReader"><code class="docutils literal notranslate"><span class="pre">FeosReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.iniFiles.read_ini.InfoReader"><code class="docutils literal notranslate"><span class="pre">InfoReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.iniFiles.read_ini.ParamBlockReader"><code class="docutils literal notranslate"><span class="pre">ParamBlockReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.iniFiles.read_ini.Reader"><code class="docutils literal notranslate"><span class="pre">Reader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/ppModule.html#module-ppModule.utils">ppModule.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#id16">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.utils.preprocess_snapshots">ppModule.utils.preprocess_snapshots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.utils.preprocess_snapshots.PreProcessLines"><code class="docutils literal notranslate"><span class="pre">PreProcessLines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.utils.preprocess_snapshots.PreProcessPlanes"><code class="docutils literal notranslate"><span class="pre">PreProcessPlanes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.utils.preprocess_snapshots.PreprocessPoints"><code class="docutils literal notranslate"><span class="pre">PreprocessPoints</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/ppModule.html#module-ppModule.utils.stats_reader">ppModule.utils.stats_reader module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ppModule.html#ppModule.utils.stats_reader.StatsReader"><code class="docutils literal notranslate"><span class="pre">StatsReader</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/modules.html#module-interface">Main Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.config"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.snapshots_info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.snapshots_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.block_info"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.block_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.compute"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.compute</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.compute_qty"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.compute_qty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.lines"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.lines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.planes"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.planes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.points"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/modules.html#interface.PostProcessMusicaa.return_stats"><code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa.return_stats()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ppMusicaa</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Configuration Guide</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/LouenasZm/ppMusicaa/blob/Main/docs/source/configuration.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="configuration-guide">
+<h1>Configuration Guide<a class="headerlink" href="#configuration-guide" title="Link to this heading"></a></h1>
+<p>This guide explains how to configure the <code class="docutils literal notranslate"><span class="pre">PostProcessMusicaa</span></code> class for post-processing Musicaa simulation data.</p>
+<section id="configuration-structure">
+<h2>Configuration Structure<a class="headerlink" href="#configuration-structure" title="Link to this heading"></a></h2>
+<p>The configuration dictionary must contain the following keys:</p>
+<section id="required-keys">
+<h3>Required Keys<a class="headerlink" href="#required-keys" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">directory</span></code></strong> (str): The directory where the simulation data is stored</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">case</span></code></strong> (str): The name of the case from Musicaa, used to read statistics (STBL, TURB, CYL, HIT, CHAN …)</p></li>
+</ul>
+</section>
+<section id="optional-keys">
+<h3>Optional Keys<a class="headerlink" href="#optional-keys" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">grid</span></code></strong> (dict): Grid information with the following optional sub-keys:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">ngh</span></code> (int): Number of ghost cells (tries to read from info.ini if not provided, default: 5)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">endianess</span></code> (str): Byte order for binary files (default: “little”)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">full_3d</span></code> (bool): Whether the grid is fully 3D curvilinear (default: False)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">new_grid</span></code> (bool): Whether to use new grid format (default: True)</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="configuration-examples">
+<h2>Configuration Examples<a class="headerlink" href="#configuration-examples" title="Link to this heading"></a></h2>
+<section id="basic-configuration">
+<h3>Basic Configuration<a class="headerlink" href="#basic-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;directory&quot;</span><span class="p">:</span> <span class="s2">&quot;/path/to/simulation/data&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;case&quot;</span><span class="p">:</span> <span class="s2">&quot;boundary_layer_case&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="complete-configuration">
+<h3>Complete Configuration<a class="headerlink" href="#complete-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;directory&quot;</span><span class="p">:</span> <span class="s2">&quot;/path/to/simulation/data&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;case&quot;</span><span class="p">:</span> <span class="s2">&quot;turbulent_channel_flow&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;grid&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;ngh&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;endianess&quot;</span><span class="p">:</span> <span class="s2">&quot;little&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;full_3d&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;new_grid&quot;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="configuration-for-different-grid-types">
+<h3>Configuration for Different Grid Types<a class="headerlink" href="#configuration-for-different-grid-types" title="Link to this heading"></a></h3>
+<section id="d-curvilinear-grid-extruded">
+<h4>2D Curvilinear Grid (Extruded)<a class="headerlink" href="#d-curvilinear-grid-extruded" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;directory&quot;</span><span class="p">:</span> <span class="s2">&quot;/data/2d_curv_simulation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;case&quot;</span><span class="p">:</span> <span class="s2">&quot;airfoil_case&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;grid&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;full_3d&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># 2D curvilinear extruded</span>
+        <span class="s2">&quot;ngh&quot;</span><span class="p">:</span> <span class="mi">5</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="d-curvilinear-grid">
+<h4>3D Curvilinear Grid<a class="headerlink" href="#d-curvilinear-grid" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;directory&quot;</span><span class="p">:</span> <span class="s2">&quot;/data/3d_curv_simulation&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;case&quot;</span><span class="p">:</span> <span class="s2">&quot;wing_case&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;grid&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;full_3d&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Fully 3D curvilinear</span>
+        <span class="s2">&quot;ngh&quot;</span><span class="p">:</span> <span class="mi">3</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="file-structure-requirements">
+<h2>File Structure Requirements<a class="headerlink" href="#file-structure-requirements" title="Link to this heading"></a></h2>
+<p>Your simulation directory should contain:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">info.ini</span></code> - Simulation information file</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">param_blocks.ini</span></code> - Block and snapshot information</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">grid_bl%.bin</span></code> - Grid files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stats_bl%.dat</span></code> - Statistics files (for the specified case)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">snapshot_id_bl%.</span></code> - Snapshot files (name of file is actually point_id_bl%.bin, line_id_bl%.bin, plane_id_bl%.bin or volumne_id_bl%.bin)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">norm_surf.dat</span></code> - Wall normal vectors (optional, computed if missing)</p></li>
+</ul>
+</section>
+<section id="configuration-validation">
+<h2>Configuration Validation<a class="headerlink" href="#configuration-validation" title="Link to this heading"></a></h2>
+<p>The class will validate your configuration and provide helpful error messages:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ppModule.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostProcessMusicaa</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">PostProcessMusicaa</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required file not found: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing configuration key: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<p>After configuration, see the <a class="reference internal" href="usage.html"><span class="std std-doc">Usage Guide</span></a> for examples of how to use the interface methods.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="ppMusicaa Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
