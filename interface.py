@@ -44,7 +44,7 @@ logger = logging.getLogger(__name__)
 
 
 # List of variables that can be computed (needs to be updated by developper)
-COMPUTED_VARIABLES = ["ufst", "rhofst", "d99", "delta", "theta", "tauw"]
+COMPUTED_VARIABLES = ["ue", "rhofst", "d99", "delta", "theta", "tauw"]
 
 # ========================== Interface to the user ==========================
 class PostProcessMusicaa:

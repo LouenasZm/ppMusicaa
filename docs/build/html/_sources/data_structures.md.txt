@@ -21,15 +21,15 @@ This document describes the data structures returned by the `PostProcessMusicaa`
 ```python
 stats = {
     1: {  # Block 1
-        "u_mean": array([...]),
-        "v_mean": array([...]),
-        "p_mean": array([...]),
-        "uu_reynolds": array([...]),
-        "uv_reynolds": array([...]),
+        "uu": array([...]),
+        "vv": array([...]),
+        "prs": array([...]),
+        "T": array([...]),
+        "u2": array([...]),
         ...
     },
     2: {  # Block 2
-        "u_mean": array([...]),
+        "rho*dux": array([...]),
         ...
     }
 }
@@ -49,8 +49,8 @@ stats = {
 **Example:**
 ```python
 delta = {
-    1: 0.0234,  # Boundary layer thickness for block 1
-    2: 0.0456,  # Boundary layer thickness for block 2
+    1: array([...]),  # Boundary layer thickness for block 1
+    2: array([...]),  # Boundary layer thickness for block 2
     ...
 }
 ```
@@ -249,18 +249,16 @@ config["grid"] = {
 ### Variable Naming Conventions
 
 **Flow Variables:**
-- `u`, `v`, `w`: Velocity components
-- `p`: Pressure
+- `uu`, `vv`, `ww`: Velocity components
+- `prs`: Pressure
 - `rho`: Density
 - `T`: Temperature
 
 **Statistical Variables:**
-- `u_mean`, `v_mean`, etc.: Time-averaged quantities
-- `uu_reynolds`, `uv_reynolds`, etc.: Reynolds stress components
-- `pp_reynolds`: Pressure fluctuation variance
+- `uu`, `vv`, etc.: Time-averaged quantities
 
 **Computed Quantities:**
 - `delta`: Boundary layer thickness
 - `theta`: Momentum thickness
 - `tauw`: Wall shear stress
-- `ufst`: Friction velocity
+- `ue`: Edge velocity

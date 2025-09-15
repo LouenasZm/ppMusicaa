@@ -34,7 +34,7 @@ class Compute2DCurv:
 
 
     # ======================== Public methods:
-    def compute_ufst(self) -> dict:
+    def compute_ue(self) -> dict:
         """
         Compute freestream velocity at each mesh for multiblock grid.
         """
