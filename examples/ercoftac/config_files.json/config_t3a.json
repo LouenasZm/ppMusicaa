@@ -1,0 +1,11 @@
+{
+    "postprocess": {
+        "directory": "/home/louenas/Documents/phd/4-results/cases/ercoftac/t3a/les_old/",
+        "grid":
+        {
+            "new_grid": false,
+            "endianess": "big"
+        },
+        "case": "stbl"
+    }
+}

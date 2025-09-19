@@ -76,7 +76,7 @@ class Compute2DCurv:
         """
         # Check if freestream velocity is already computed:
         if not self._in_stats("ufst"):
-            self.compute_ufst()
+            self.compute_ue()
 
         for block_id in range(1, self.info["nbloc"]+1):
             # Get freestream velocity:
@@ -115,7 +115,7 @@ class Compute2DCurv:
         wall_normal = self.grid["nwall_normal"]
         # Check if freestream velocity is already computed:
         if not self._in_stats("ufst"):
-            self.compute_ufst()
+            self.compute_ue()
 
         for block_id in range(1, self.info["nbloc"]+1):
             # Check if there is a wall:
@@ -141,7 +141,7 @@ class Compute2DCurv:
         """
         # Check if freestream velocity is already computed:
         if not self._in_stats("ufst"):
-            self.compute_ufst()
+            self.compute_ue()
 
         # Check if d99 is already computed:
         if not self._in_stats("d99"):
@@ -173,7 +173,7 @@ class Compute2DCurv:
         """
         # Check if freestream velocity is already computed:
         if not self._in_stats("ufst"):
-            self.compute_ufst()
+            self.compute_ue()
         # Check if d99 is already computed:
         if not self._in_stats("d99"):
             self.compute_d99()
@@ -198,7 +198,7 @@ class Compute2DCurv:
         """
         # Check if freestream velocity is already computed:
         if not self._in_stats("ufst"):
-            self.compute_ufst()
+            self.compute_ue()
 
         # Check if freestream density is already computed:
         if not self._in_stats("rho_fst"):
