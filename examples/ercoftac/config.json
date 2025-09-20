@@ -2,8 +2,7 @@
     "t3a":
     {
         "ppMusicaa": {
-            "directory": "/home/louenas/Documents/phd/8-Confs/4_etmm/4_database/t3a/",
-            "exp_path": "/home/louenas/Documents/phd/4-results/cases/ercoftac/t3a/exp/",
+            "directory": "/home/louenas/Documents/work/phd/4-simu/ercoftac/t3a/",
             "grid":
             {
                 "new_grid": false,
@@ -11,7 +10,8 @@
             },
             "case": "stbl"
         },
-
+        
+        "exp_path": "/home/louenas/Documents/work/phd/4-simu/ercoftac/exp/",
         "Uin_exp": 5.4,
         "Uin_num": 173.07,
         "rex_cf_min": 146186.77,
