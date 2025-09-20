@@ -235,7 +235,7 @@ class PostProcessMusicaa:
         ----------
         qty : str
             Name of the quantity to compute. Available quantities:
-            'ufst', 'rhofst', 'd99', 'delta', 'theta', 'tauw'
+            'ue', 'rhofst', 'd99', 'delta', 'theta', 'tauw'
 
         Returns
         -------
