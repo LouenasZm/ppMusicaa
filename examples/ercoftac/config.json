@@ -1,0 +1,139 @@
+{
+    "t3a":
+    {
+        "ppMusicaa": {
+            "directory": "path/to/t3a/",
+            "grid":
+            {
+                "new_grid": false,
+                "endianess": "big"
+            },
+            "case": "stbl"
+        },
+        
+        "exp_path": "path/to/t3a/exp/",
+        "Uin_exp": 5.4,
+        "Uin_num": 173.07,
+        "rex_cf_min": 146186.77,
+        "rex_cf_max": 301520.63,
+        "jmin_tu": 140,
+        "jmax_tu": 160,
+        "xmin": -1.0,
+        "xmax": 1.7
+    },
+
+    "t3b":
+    {
+        "ppMusicaa": {
+            "directory": "path/to/t3b/",
+            "grid":
+            {
+                "new_grid": false,
+                "endianess": "little"
+            },
+            "case": "stbl"
+        },
+        
+        "exp_path": "path/to/t3b/",
+        "Uin_exp": 9.4,
+        "Uin_num": 173.07,
+        "rex_cf_min": 61892.60,
+        "rex_cf_max": 156057.3,
+        "jmin_tu": 140,
+        "jmax_tu": 160,
+        "xmin": -0.8,
+        "xmax": 3.4
+    },
+
+    "t3c2":
+    {
+        "ppMusicaa": {
+            "directory": "path/to/t3c2/",
+            "grid":
+            {
+                "new_grid": true,
+                "endianess": "little"
+            },
+            "case": "stbl"
+        },
+        
+        "exp_path": "path/to/t3c2/exp/",
+        "Uin_exp": 5.0,
+        "Uin_num": 69.23,
+        "rex_cf_min": 528884.0,
+        "rex_cf_max": 613931.86,
+        "jmin_tu": 270,
+        "jmax_tu": 300,
+        "xmin": -6.4,
+        "xmax": 1.75
+    },
+
+    "t3c3":
+    {
+        "ppMusicaa": {
+            "directory": "path/to/t3c3/",
+            "grid":
+            {
+                "new_grid": true,
+                "endianess": "little"
+            },
+            "case": "stbl"
+        },
+        
+        "exp_path": "path/to/t3c3/exp/",
+        "Uin_exp": 3.7,
+        "Uin_num": 69.23,
+        "rex_cf_min": 419629.59,
+        "rex_cf_max": 451767.006,
+        "jmin_tu": 250,
+        "jmax_tu": 270,
+        "xmin": -13,
+        "xmax": 2.7
+    },
+
+    "t3c4":
+    {
+        "ppMusicaa": {
+            "directory": "path/to/t3c4/",
+            "grid":
+            {
+                "new_grid": true,
+                "endianess": "little"
+            },
+            "case": "stbl"
+        },
+        
+        "exp_path": "path/to/t3c4/exp/",
+        "Uin_exp": 1.2,
+        "Uin_num": 69.23,
+        "rex_cf_min": 176487.77,
+        "rex_cf_max": 198941.38,
+        "jmin_tu": 150,
+        "jmax_tu": 170,
+        "xmin": -8,
+        "xmax": 0.8
+    },
+
+    "t3c5":
+    {
+        "ppMusicaa": {
+            "directory": "path/to/t3c5/",
+            "grid":
+            {
+                "new_grid": true,
+                "endianess": "little"
+            },
+            "case": "stbl"
+        },
+
+        "exp_path": "path/to/t3c5/exp/",
+        "Uin_exp": 8.4,
+        "Uin_num": 69.23,
+        "rex_cf_min": 330510.9,
+        "rex_cf_max": 793494.4,
+        "jmin_tu": 350,
+        "jmax_tu": 400,
+        "xmin": -0.7,
+        "xmax": 1.8
+    }
+}

@@ -252,15 +252,15 @@
 <p><strong>Example:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
     <span class="mi">1</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># Block 1</span>
-        <span class="s2">&quot;u_mean&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>
-        <span class="s2">&quot;v_mean&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>
-        <span class="s2">&quot;p_mean&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>
-        <span class="s2">&quot;uu_reynolds&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>
-        <span class="s2">&quot;uv_reynolds&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>
+        <span class="s2">&quot;uu&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>
+        <span class="s2">&quot;vv&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>
+        <span class="s2">&quot;prs&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>
+        <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>
+        <span class="s2">&quot;u2&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>
         <span class="o">...</span>
     <span class="p">},</span>
     <span class="mi">2</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># Block 2</span>
-        <span class="s2">&quot;u_mean&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>
+        <span class="s2">&quot;rho*dux&quot;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>
         <span class="o">...</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -280,8 +280,8 @@
 </div>
 <p><strong>Example:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">delta</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="mi">1</span><span class="p">:</span> <span class="mf">0.0234</span><span class="p">,</span>  <span class="c1"># Boundary layer thickness for block 1</span>
-    <span class="mi">2</span><span class="p">:</span> <span class="mf">0.0456</span><span class="p">,</span>  <span class="c1"># Boundary layer thickness for block 2</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>  <span class="c1"># Boundary layer thickness for block 1</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">]),</span>  <span class="c1"># Boundary layer thickness for block 2</span>
     <span class="o">...</span>
 <span class="p">}</span>
 </pre></div>
@@ -486,23 +486,21 @@
 <h3>Variable Naming Conventions<a class="headerlink" href="#variable-naming-conventions" title="Link to this heading"></a></h3>
 <p><strong>Flow Variables:</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">u</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>, <code class="docutils literal notranslate"><span class="pre">w</span></code>: Velocity components</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code>: Pressure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uu</span></code>, <code class="docutils literal notranslate"><span class="pre">vv</span></code>, <code class="docutils literal notranslate"><span class="pre">ww</span></code>: Velocity components</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prs</span></code>: Pressure</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">rho</span></code>: Density</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">T</span></code>: Temperature</p></li>
 </ul>
 <p><strong>Statistical Variables:</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">u_mean</span></code>, <code class="docutils literal notranslate"><span class="pre">v_mean</span></code>, etc.: Time-averaged quantities</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">uu_reynolds</span></code>, <code class="docutils literal notranslate"><span class="pre">uv_reynolds</span></code>, etc.: Reynolds stress components</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pp_reynolds</span></code>: Pressure fluctuation variance</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uu</span></code>, <code class="docutils literal notranslate"><span class="pre">vv</span></code>, etc.: Time-averaged quantities</p></li>
 </ul>
 <p><strong>Computed Quantities:</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">delta</span></code>: Boundary layer thickness</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">theta</span></code>: Momentum thickness</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">tauw</span></code>: Wall shear stress</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ufst</span></code>: Friction velocity</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ue</span></code>: Edge velocity</p></li>
 </ul>
 </section>
 </section>

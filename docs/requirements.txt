@@ -3,3 +3,4 @@ sphinx>=5.0.0
 sphinx-rtd-theme>=1.2.0
 myst-parser>=0.18.0
 sphinxcontrib-napoleon>=0.7
+linkify-it-py>=2.0.0

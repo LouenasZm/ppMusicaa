@@ -59,6 +59,13 @@ class StatsReader:
                     if value is not None:
                         _stats[i][var_name] = value[0] if isinstance(value, dict) \
                                                 and len(value[0]) > 1 else value[-1]
+                # Compute root mean square velocitys
+                _stats[i]['u_rms'] = _stats[i]['u2'] - _stats[i]['uu']**2
+                _stats[i]['v_rms'] = _stats[i]['v2'] - _stats[i]['vv']**2
+                _stats[i]['w_rms'] = _stats[i]['w2'] - _stats[i]['ww']**2
+                _stats[i]['uv_rms'] = _stats[i]['uv'] - _stats[i]['uu']*_stats[i]['vv']
+                _stats[i]['uw_rms'] = _stats[i]['uw'] - _stats[i]['uu']*_stats[i]['ww']
+                _stats[i]['vw_rms'] = _stats[i]['vw'] - _stats[i]['vv']*_stats[i]['ww']
 
         # Reading of stats2_bl.bin
         for i in range(1, info["nbloc"] + 1):
@@ -215,6 +222,13 @@ class StatsReader:
                     if value is not None:
                         _stats[i][var_name] = value[0] if isinstance(value, dict) \
                                                 and len(value[0]) > 1 else value[-1]
+                # Compute root mean square velocitys
+                _stats[i]['u_rms'] = _stats[i]['u2'] - _stats[i]['uu']**2
+                _stats[i]['v_rms'] = _stats[i]['v2'] - _stats[i]['vv']**2
+                _stats[i]['w_rms'] = _stats[i]['w2'] - _stats[i]['ww']**2
+                _stats[i]['uv_rms'] = _stats[i]['uv'] - _stats[i]['uu']*_stats[i]['vv']
+                _stats[i]['uw_rms'] = _stats[i]['uw'] - _stats[i]['uu']*_stats[i]['ww']
+                _stats[i]['vw_rms'] = _stats[i]['vw'] - _stats[i]['vv']*_stats[i]['ww']
 
         # Reading of stats2_bl.bin
         for i in range(1, info["nbloc"] + 1):
