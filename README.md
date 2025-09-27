@@ -10,8 +10,15 @@ The present framework is composed of the following core components:
 * **iniFiles**: read .ini files, they are the code's input files.
 * **utils**: some utility files to avoid over-complexifying the modules.
 
-### Installation
-
+## Installation
+```sh
+git clone git@github.com:LouenasZm/ppMusicaa.git
+cd ppMusicaa
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip install -e .
+```
 ## Documentation
 
 The complete documentation is available at: https://louenaszm.github.io/ppMusicaa/
