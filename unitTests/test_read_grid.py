@@ -45,7 +45,7 @@ def test_directory_property(mock_directory):
 def test_read_one_block(mock_directory, mock_binary_file):
     """Test reading one block."""
     grid_reader = ReadGrid(directory=str(mock_directory), config={"full_3d": True})
-    x, y, z = grid_reader.read_one_block(str("/grid_bl1_ngh5.bin"), 110, 210, 70)
+    x, y, z = grid_reader._read_one_block(str("/grid_bl1_ngh5.bin"), 110, 210, 70)
     assert x.shape == (110, 210, 70)
     assert y.shape == (110, 210, 70)
     assert z.shape == (110, 210, 70)
