@@ -1,13 +1,17 @@
 LICENSE
 README.md
+pyproject.toml
 setup.py
 ppModule/__init__.py
+ppModule/interface.py
 ppModule/binFiles/__init__.py
 ppModule/binFiles/read_grid.py
 ppModule/binFiles/read_snapshots.py
 ppModule/binFiles/read_stats.py
+ppModule/compute/compute_2d_curv.py
 ppModule/iniFiles/__init__.py
 ppModule/iniFiles/read_ini.py
+ppModule/readExp/ercoftac.py
 ppModule/utils/__init__.py
 ppModule/utils/preprocess_snapshots.py
 ppModule/utils/stats_reader.py
