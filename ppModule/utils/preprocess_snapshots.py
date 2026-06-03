@@ -6,6 +6,59 @@ import numpy as np
 #
 logger = logging.getLogger(__name__)
 
+class PreprocessVolumes:
+    """
+        This class conains methods to preprocess volumes before returning them to the user
+    """
+    def __init__(self, snapshot_info: dict,
+                 info: dict, config: dict) -> None:
+        self.snapshot_info = snapshot_info
+        self.info = info
+        self.config = config
+        self.volume_info = config["info volume"]
+
+    # =========== Public methods:
+    def volumes(self) -> dict:
+        """
+        Method to preprocess volumes, it returns a dictionnary with the x1, x2, x3 of each volume
+        and the volume values to plot.
+        """
+        volumes: dict = {}
+        #
+        for block_id in range(1, self.info["nbloc"]+1):
+            volumes[block_id]    = {}
+            for volume_id in range(1, self.volume_info[block_id]["nb_v"]+1):
+                volumes[block_id][volume_id] = {}
+                nx1, nx2, ny1, ny2, nz1, nz2 = self.volume_info[block_id][volume_id]["I1"], self.volume_info[block_id][volume_id]["I2"], \
+                                               self.volume_info[block_id][volume_id]["J1"], self.volume_info[block_id][volume_id]["J2"], \
+                                               self.volume_info[block_id][volume_id]["K1"], self.volume_info[block_id][volume_id]["K2"]
+
+
+                volumes[block_id][volume_id]["fields"] = {}
+                for varname in self.config["volumes"][block_id][volume_id]:
+                    volumes[block_id][volume_id]["fields"][varname] = {}
+                    
+
+                    for snapshot in self.config["volumes"][block_id][volume_id][varname]:
+                        volumes[block_id][volume_id]["fields"][varname][snapshot] = self.config["volumes"][block_id][volume_id][varname][snapshot][nx1:nx2+1, ny1:ny2+1, nz1:nz2+1]
+                    
+                    if self.info["is_curv"] == "T" and self.config["grid"]["full_3d"] is False:
+                        volumes[block_id][volume_id]["x1"]    = self.config["grid"]["x"][block_id][nx1:nx2+1, ny1:ny2+1]
+                        volumes[block_id][volume_id]["x2"]    = self.config["grid"]["y"][block_id][nx1:nx2+1, ny1:ny2+1]
+                        volumes[block_id][volume_id]["x3"]    = self.config["grid"]["z"][block_id][nz1:nz2+1]
+                    elif self.info["is_curv"] == "T" and self.config["grid"]["full_3d"] is True:
+                        volumes[block_id][volume_id]["x1"]    = self.config["grid"]["x"][block_id][nx1:nx2+1, ny1:ny2+1, nz1:nz2+1]
+                        volumes[block_id][volume_id]["x2"]    = self.config["grid"]["y"][block_id][nx1:nx2+1, ny1:ny2+1, nz1:nz2+1]
+                        volumes[block_id][volume_id]["x3"]    = self.config["grid"]["z"][block_id][nx1:nx2+1, ny1:ny2+1, nz1:nz2+1]
+                    else:
+                        volumes[block_id][volume_id]["x1"]    = self.config["grid"]["x"][block_id][nx1:nx2+1]
+                        volumes[block_id][volume_id]["x2"]    = self.config["grid"]["y"][block_id][ny1:ny2+1]
+                        volumes[block_id][volume_id]["x3"]    = self.config["grid"]["z"][block_id][nz1:nz2+1] \
+                                                            if len(self.config["grid"]["z"][block_id]) > 3 else np.zeros((nz2-nz1+1))
+
+        logger.info("Volumes preprocessed for plotting done.")
+        return volumes
+
 class PreProcessPlanes:
     """
         This class contains methods to preprocess Planes before plotting them.
@@ -18,7 +71,6 @@ class PreProcessPlanes:
         Extract grid, info.ini information and plane information from config dictionnary
         """
         self.info   = info
-        self.snapshot_info = snapshot_info
         self.config = config
         self._grid  = config["grid"]
         self.plane_info = config["info plane"]
@@ -93,9 +145,15 @@ class PreProcessPlanes:
             return None
 
         # Else preprocess the values:
+        m = 0
         for i in range(1, nvar+1):
             varname = self.plane_info[block_id][plane_id]['var' + str(i)]
+            if varname == "udf":
+                m += 1
+                varname = varname + str(m)
+            # Get the value from the config:
             value   = self.config["planes"][block_id][plane_id][varname]
+            
             if self.plane_info[block_id][plane_id]["normal"]==1 \
                             or self.plane_info[block_id][plane_id]["normal"]==2:
                 self.transpose_arrays_in_dict(value)
@@ -117,7 +175,7 @@ class PreProcessPlanes:
         """
         if self.info["is_curv"] == "T" and self._grid["full_3d"] is False:
             ix= self.plane_info[block_id][plane_id]["index"]
-            x2= x2[ix, :]
+            x2= x2[:, ix]
         elif self.info["is_curv"] == "T" and self._grid["full_3d"] is True:
             ix= self.plane_info[block_id][plane_id]["index"]
             x1 = x1[ix,:,:]

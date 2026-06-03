@@ -20,6 +20,7 @@ ReadPoints
 import os
 import logging
 import numpy as np
+import dask.array as da
 
 logger = logging.getLogger(__name__)
 
@@ -282,7 +283,9 @@ class ReadSnapshots:
         self.snapshots_info[block_id][snapshot_id]['type'] = 3
         iv = self.info_volume[block_id]['nb_v']
 
+
         self.info_volume[block_id][iv] = {}
+        self.info_volume[block_id][iv]['nvar'] = self.snapshots_info[block_id][snapshot_id]['nvar']
         self.info_volume[block_id][iv]['I1'] = self.snapshots_info[block_id][snapshot_id]['I1']
         self.info_volume[block_id][iv]['I2'] = self.snapshots_info[block_id][snapshot_id]['I2']
         self.info_volume[block_id][iv]['J1'] = self.snapshots_info[block_id][snapshot_id]['J1']
@@ -292,8 +295,116 @@ class ReadSnapshots:
 
         for var in range(1, self.snapshots_info[block_id][snapshot_id]['nvar'] + 1):
             self.info_volume[block_id][iv]['var' + str(var)] = \
-                self.snapshots_info[block_id][snapshot_id]['var' + str(var)]
+                self.snapshots_info[block_id][snapshot_id]["list_var"][var - 1]
         return self.info_volume
+
+# ==========================
+# Class to read volumes from binary files
+# ==========================
+# ==========================
+# Class to read volumes from binary files
+# ==========================
+class ReadVolumes(ReadSnapshots):
+    """
+    Class to read volumes from binary files using Dask for out-of-core memory management.
+    """
+
+    @staticmethod
+    def read_3d_dask(filename: str, nx: int, ny: int, nz: int, nvar: int):
+        try:
+            filesize = os.path.getsize(filename)
+        except FileNotFoundError:
+            logger.error("File %s not found.", filename)
+            return None
+
+        bytes_per_element = 8  # '<f8' is 8 bytes (float64)
+        elements_per_snapshot = nx * ny * nz
+        bytes_per_snapshot = nvar * elements_per_snapshot * bytes_per_element
+
+        num_snapshots = filesize // bytes_per_snapshot
+
+        if num_snapshots == 0:
+            logger.error("File %s is too small to contain even one snapshot.", filename)
+            return None
+        if filesize % bytes_per_snapshot != 0:
+            logger.warning(
+                "File %s size is not an exact multiple of snapshot size. "
+                "There may be incomplete data at the end of the file.",
+                filename
+            )
+
+        mmap_arr: np.memmap = np.memmap(
+            filename,
+            dtype='<f8',
+            mode='r',
+            shape=(num_snapshots, nvar, elements_per_snapshot)
+        )
+
+        dask_arr = da.from_array(mmap_arr, chunks=(1, 1, elements_per_snapshot))
+
+        def reshape_fortran(block):
+            """
+            Reshapes the flat spatial block into 3D using Fortran order natively.
+            This preserves the F-contiguous memory layout required by 3D plotters.
+            """
+            return block.reshape((block.shape[0], nx, ny, nz), order='F')
+
+        data = {}
+        for i in range(1, nvar + 1):
+            var_1d = dask_arr[:, i - 1, :]
+
+            var_3d = var_1d.map_blocks(
+                reshape_fortran,
+                dtype='<f8',
+                chunks=(1, nx, ny, nz),
+                drop_axis=[1],       
+                new_axis=[1, 2, 3]   
+            )
+
+            # Note: These values are Dask arrays. Call .compute() on them before plotting!
+            data['var' + str(i)] = {ind: var_3d[ind] for ind in range(num_snapshots)}
+
+        return data
+
+    def read_volumes(self):
+        volumes: dict = {}
+
+        for block in range(1, self.info["nbloc"] + 1):
+            volumes[block] = {}
+            for vol_id in range(1, self.info_volume[block]["nb_v"] + 1):
+                volumes[block][vol_id] = {}
+                
+                # FIX: Calculate exact dimensions of this specific volume
+                vol_info = self.info_volume[block][vol_id]
+                nx_vol = vol_info['I2'] - vol_info['I1'] + 1
+                ny_vol = vol_info['J2'] - vol_info['J1'] + 1
+                nz_vol = vol_info['K2'] - vol_info['K1'] + 1
+
+                nvar = vol_info['nvar']
+
+                if 0 < vol_id < 10:
+                    filename = self.directory + '/volume_00' + str(vol_id) + '_bl' + str(block) + '.bin'
+                elif vol_id > 10:
+                    filename = self.directory + '/volume_0' + str(vol_id) + '_bl' + str(block) + '.bin'
+                else:
+                    logger.error("Error in the volume id.")
+                    return None
+
+                temp = self.read_3d_dask(filename=filename, nx=nx_vol, ny=ny_vol, nz=nz_vol, nvar=nvar)
+                if temp is None:
+                    continue
+
+                m = 0
+                for i in range(1, nvar + 1):
+                    varname = vol_info['var'+str(i)]
+                    if varname == "udf":
+                        m += 1
+                        varname = varname + str(m)
+
+                    volumes[block][vol_id][varname] = temp["var" + str(i)]
+
+        logger.info("Volumes mapped from binary files via Dask.")
+        return volumes
 
 # ==========================
 # Class to read planes from binary files
@@ -302,7 +413,7 @@ class ReadPlanes(ReadSnapshots):
     """
     Class to read planes from binary files.
 
-    This class is used by the ppModule to read planes from binary files. 
+    This class is used by the ppModule to read planes from binary files.
     It also provides a static method to read 2D binary data, which can be 
     used to read statistics or other related data.
 
@@ -403,7 +514,6 @@ class ReadPlanes(ReadSnapshots):
                     return None
 
                 nvar = self.info_plane[block][plane_id]['nvar']
-
                 if 0 < plane_id < 10:
                     filename = \
                         self.directory + '/plane_00' + str(plane_id) + '_bl' + str(block) + '.bin'
@@ -415,8 +525,12 @@ class ReadPlanes(ReadSnapshots):
                     return None
 
                 temp = self.read_2d(filename=filename, n1=n1, n2=n2, nvar=nvar)
+                m = 0
                 for i in range(1, nvar + 1):
                     varname = self.snapshots_info[block][plane_id]["list_var"][i - 1]
+                    if varname == "udf":
+                        m += 1
+                        varname = varname + str(m)
                     planes[block][plane_id][varname] = temp["var" + str(i)]
         logger.info("Planes read from binary files.")
         return planes
