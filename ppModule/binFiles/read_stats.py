@@ -38,6 +38,11 @@ class ReadStats:
         if not callable(reader):
             raise TypeError(f"The object returned by stats_orienter is not callable: {reader}")
         self._stats = reader(self._directory, info=self._info)
+        # Compute velocity derivatives:
+        for block in range(1, self._info["nbloc"]+1):
+            for deriv in ["dux", "duy", "duz", "dvx", "dvy", "dvz", "dwx", "dwy", "dwz"]:
+                self._stats[block][deriv] = self._stats[block][f'rho*{deriv}']/self._stats[block]['rho']
+
         return self._stats
 
     def stats_orienter(self) -> object:
