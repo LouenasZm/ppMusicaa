@@ -66,7 +66,7 @@ class Compute2DCurv:
                 self.stats[block_id]["ufst"][:]= self.info["Uref"]
                 self.stats[block_id]["j99"][:] = 1
 
-        logger.info("Freestream velocity computed for all blocks.")
+        logger.debug("Freestream velocity computed for all blocks.")
         return self.stats
     #
     #
@@ -103,7 +103,7 @@ class Compute2DCurv:
 
             self.stats[block_id]["rho_fst"] = rho_fst
 
-        logger.info("Freestream density computed for all blocks.")
+        logger.debug("Freestream density computed for all blocks.")
         return self.stats
     #
     #
@@ -131,7 +131,7 @@ class Compute2DCurv:
             self.stats[block_id]["d99"] = d99
             self.stats[block_id]["j99"]  = j99
 
-        logger.info("99% boundary layer thickness computed for all blocks.")
+        logger.debug("99% boundary layer thickness computed for all blocks.")
         return self.stats
     #
     #
@@ -163,7 +163,7 @@ class Compute2DCurv:
             # Store displacement thickness in stats:
             self.stats[block_id]["deltas"] = deltas
 
-        logger.info("Displacement thickness computed for all blocks.")
+        logger.debug("Displacement thickness computed for all blocks.")
         return self.stats
     #
     #
@@ -188,7 +188,7 @@ class Compute2DCurv:
             # Store momentum thickness in stats:
             self.stats[block_id]["theta"] = theta
 
-        logger.info("Momentum thickness computed for all blocks.")
+        logger.debug("Momentum thickness computed for all blocks.")
         return self.stats
     #
     #
@@ -218,7 +218,7 @@ class Compute2DCurv:
             self.stats[block_id]["cf"]   = cf
 
 
-        logger.info("Skin friction coefficient computed for all blocks.")
+        logger.debug("Skin friction coefficient computed for all blocks.")
         return self.stats
     #
     #
