@@ -27,17 +27,20 @@ in the docs/ directory.
 import os
 import logging
 import numpy as np
+from typing import Any
 
 # Import to read the grid, stats and *ini files
 from ppModule.binFiles.read_grid    import ReadGrid
 from ppModule.binFiles.read_stats   import ReadStats
 from ppModule.iniFiles.read_ini     import ParamBlockReader
 # Imports to deal with the snapshots
-from ppModule.binFiles.read_snapshots       import ReadPlanes, ReadLines, ReadPoints
-from ppModule.utils.preprocess_snapshots    import PreProcessPlanes, \
+from ppModule.binFiles.read_snapshots       import (ReadVolumes, ReadPlanes,
+                                                    ReadLines, ReadPoints)
+from ppModule.utils.preprocess_snapshots    import PreprocessVolumes, PreProcessPlanes, \
                                                    PreProcessLines, PreprocessPoints
 # Import to compute first order and second order terms:
 from ppModule.compute.compute_2d_curv   import Compute2DCurv
+from ppModule.compute.compute_cartesian import ComputeCartesian
 #
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -92,6 +95,8 @@ class PostProcessMusicaa:
     """
     def __init__(self, config: dict) -> None:
         self.config     = config
+        # allow different compute implementations (2D/3D/cartesian) without static type conflicts
+        self.compute: Any = None
         self._read_block_info()
         self._grid()
         self._compute_orienter()
@@ -116,6 +121,29 @@ class PostProcessMusicaa:
             self._stats()
         #
         return self.config["stats"]
+
+    def volumes(self, fluctuation: bool = False) -> dict:
+        """
+        Preprocess volume data for visualization.
+
+        Parameters
+        ----------
+        fluctuation : bool, optional
+            If True, return fluctuation fields (requires statistics).
+            If False, return instantaneous snapshots. Default is False.
+        Returns
+        -------
+        dict
+            Preprocessed volume data with coordinates and field values.
+            Structure: ``{"block_id": {"x1": ..., "x2": ..., "x3": ..., "fields": {...}}}``
+        """
+        if "volumes" not in self.config:
+            self._volumes()
+        pp_volumes = PreprocessVolumes(snapshot_info=self.snapshots_info,
+                                        info=self.info,
+                                        config=self.config)
+        volumes = pp_volumes.volumes()
+        return volumes
 
     def planes(self,
                fluctuation: bool = False) -> dict:
@@ -273,6 +301,7 @@ class PostProcessMusicaa:
         # Call the method dynamically:
         method = getattr(self.compute, method_name)
         try:
+
             self.config["stats"]    = method()
             # Extract the requested variable from stats:
             result = {block_id: block_data.get(qty.lower(), None)
@@ -312,6 +341,15 @@ class PostProcessMusicaa:
         reader = ReadStats(directory=self.config["directory"],
                            case=self.config["case"], info=self.info)
         self.config["stats"] = reader.read_stats()
+
+    def _volumes(self) -> None:
+        """
+        Read the volumes from the binary files, the volumes are saved in the volumes dictionnary
+        """
+        volume_reader = ReadVolumes(repo=self.config["directory"], info=self.info,
+                                     snapshots_info=self.snapshots_info)
+        self.config["volumes"] = volume_reader.read_volumes()
+        self.config["info volume"] = volume_reader.info_volume
 
     def _planes(self) -> None:
         """
@@ -366,10 +404,18 @@ class PostProcessMusicaa:
         # Check if stats have been read already or not (logically they should not
         # have been read at this point)
         if "stats" not in self.config:
-            self._stats()
+            try:
+                self._stats()
+            except Exception as e:
+                self.config["stats"] = {}
+                logger.error("Error reading stats: %s", e)
         # Orient to correct module:
         if self.info["is_curv"] == "F":
-            logger.error("Post-processing for cartesian grid not implemented yet")
+            self.compute = ComputeCartesian(grid=self.config["grid"],
+                                            info=self.info,
+                                            stats=self.config["stats"],
+                                            block_info=self.block_info
+                                            )
         elif self.info["is_curv"] == "T" and not full_3d:
             self.compute = Compute2DCurv(grid=self.config["grid"],
                                          info=self.info,
@@ -387,10 +433,8 @@ class PostProcessMusicaa:
         # Check if the wall normal vector file exists
         normal_file_path = os.path.join(self.config["directory"], "norm_surf.dat")
         if not os.path.exists(normal_file_path):
-            logger.info("Wall normal vector file not found, computing it...")
             self.config["grid"]["nwall_normal"] = self.compute.compute_wall_normal()
         else:
-            logger.info("Wall normal vector file found.")
             self.config["grid"]["nwall_normal"] = self._read_norm_surf()
 
     def _read_norm_surf(self) -> dict:

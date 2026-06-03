@@ -208,12 +208,12 @@ class ParamBlockReader(Reader):
                     nvar            = int(snapshot_line[7])
                     list_var        = snapshot_line[8:8+nvar]
                     snapshot_info   = {
-                        'I1': int(snapshot_line[0]),
-                        'I2': int(snapshot_line[1]),
-                        'J1': int(snapshot_line[2]),
-                        'J2': int(snapshot_line[3]),
-                        'K1': int(snapshot_line[4]),
-                        'K2': int(snapshot_line[5]),
+                        'I1': int(snapshot_line[0])-1,
+                        'I2': int(snapshot_line[1])-1,
+                        'J1': int(snapshot_line[2])-1,
+                        'J2': int(snapshot_line[3])-1,
+                        'K1': int(snapshot_line[4])-1,
+                        'K2': int(snapshot_line[5])-1,
                         'freq': int(snapshot_line[6]),
                         'nvar': nvar,
                         'list_var': list_var
@@ -307,7 +307,7 @@ class InfoReader(Reader):
         """
         super().__init__(file_path)
         self.info = self._read_ini_file()
-        logger.info("Reading info.ini file succesfully")
+        logger.debug("Reading info.ini file succesfully")
 
     def _read_ini_file(self):
         """

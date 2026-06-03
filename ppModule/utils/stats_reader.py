@@ -101,7 +101,6 @@ class StatsReader:
                     if value is not None and value:
                         _stats[i][var_name] = value[0] if isinstance(value, dict) \
                                                 and len(value[0]) > 1 else value[-1]
-        logger.info("Done reading stats STBL from stats_bl(i).bin files")
         return _stats
 
     @staticmethod

@@ -119,7 +119,7 @@ class ReadGrid():
                 z[nbl] = extract_grid(z_ex[nbl], ngh, self.info["is_curv"], self.full_3d)
             else:
                 x[nbl], y[nbl], z[nbl] = self._read_old_grid_block(file, nx, ny, nz)
-        logger.info("Done reading grid from binary files")
+        logger.debug("Done reading grid from binary files")
         return x, y, z
 
     # ============== Private methods:

@@ -1,6 +1,6 @@
 """
     Module contains class to compute quantities for cases with 2D
-    curvilinear or extruded 3D curvilinear grid.
+    Cartesian grids.
     
     N.B: the module assumes the user followed the convention of having the walls
     located at jmin in the block.
@@ -14,10 +14,9 @@ from scipy.ndimage          import gaussian_filter1d  # type: ignore
 # Set up logging
 logger = logging.getLogger(__name__)
 
-class Compute2DCurv:
+class ComputeCartesian:
     """
-        Class to compute first and second order quantities for cases with 2D curvilinear or
-        extruded 3D curvilinear grid.
+        Class to compute first and second order quantities for cases with 2D Cartesian grids.
     """
 
     def __init__(self, grid: dict,
@@ -227,7 +226,6 @@ class Compute2DCurv:
         Assumes the wall normal vector is constant at jmin and goes upwards.
         This method is called if the file "norm_surf.dat" is not found in the directory.
         """
-        print("In compute wall normal")
         wall_normal: dict = {}
         for block in range(1, self.info["nbloc"]+1):
             normal_x    = np.zeros(self.info[f"block {block}"]["nx"])
@@ -237,14 +235,13 @@ class Compute2DCurv:
 
         return wall_normal
     # ======================== Private methods:
-    def _freestream_velocity(self, block: int, c=0.02) -> tuple:
+    def _freestream_velocity(self, block: int, c=0.05) -> tuple:
         """
         Compute freestream velocity at each mesh location for a given block using 
         criterion on vorticity.
         """
         vorticity = self.stats[block]["rho*dvx"]/self.stats[block]["rho"] \
                     - self.stats[block]["rho*duy"]/self.stats[block]["rho"]
-
         u_fst   = np.zeros_like(vorticity[:,0])
         j_fst   = np.zeros_like(vorticity[:,0])
         for i in range(1, self.info[f"block {block}"]["nx"]):
@@ -254,9 +251,10 @@ class Compute2DCurv:
                 if self.stats[block]["uu"][i,j] < 0.0:
                     offset = j + 2
             #
-            ind_ = np.where(-self.grid["y"][block][i,offset:]*vorticity[i, offset:] < c)[0]
+            ind_ = np.where(-self.grid["y"][block][offset:]*vorticity[i, offset:] < c)[0]
             if len(ind_) > 0:
-                ind_     = ind_[0]
+                
+                ind_     = ind_[0] if ind_[0] != 0 else ind_[1]
                 u_fst[i]= self.stats[block]["uu"][i, ind_]
                 j_fst[i]= ind_
             else:
@@ -284,9 +282,9 @@ class Compute2DCurv:
             i1 -= 1
             i2  = int(m[-1]+1)
 
-            # Known points:
-            x1  = self.grid["x"][block][:i1 , int(jfst[i1])]
-            x2  = self.grid["x"][block][i2: , int(jfst[i2])]
+            # Known points for 1D arrays:
+            x1  = self.grid["x"][block][:i1]
+            x2  = self.grid["x"][block][i2:]
             u1  = ufst[:i1]
             u2  = ufst[i2:]
 
@@ -295,7 +293,7 @@ class Compute2DCurv:
             u2  = gaussian_filter1d(input=u2, sigma=3)
 
             # Interpolation for points between k and m:
-            x_interp    = self.grid["x"][block][i1:i2, int(jfst[i2])]
+            x_interp    = self.grid["x"][block][i1:i2]
 
             # Create interpolation function:
             interpolator    = interp1d(np.concatenate([x1, x2]),
@@ -325,19 +323,18 @@ class Compute2DCurv:
                     and j < self.info[f"block {block}"]["ny"] - 1:
                 j += 1
                 if normal_w is None:
-                    raise ValueError("normal_w must be provided for curvilinear meshes.")
-                l_jm1 = ((self.grid["y"][block][i, j - 1] - self.grid["y"][block][i, 0]) ** 2 +
-                         (self.grid["x"][block][i, j - 1]
-                          - self.grid["x"][block][i, 0]) ** 2) ** 0.5
-                #
-                dl_j = ((self.grid["y"][block][i, j] - self.grid["y"][block][i, j - 1]) ** 2 +
-                        (self.grid["x"][block][i, j] - self.grid["x"][block][i, j - 1]) ** 2) ** 0.5
-                #
+                    raise ValueError("normal_w must be provided.")
+                
+                # Simplified 1D distance calculations for Cartesian geometries
+                l_jm1 = self.grid["y"][block][j - 1] - self.grid["y"][block][0]
+                dl_j  = self.grid["y"][block][j] - self.grid["y"][block][j - 1]
+                
                 l_j = dl_j * (0.99 * self.stats[block]["ufst"][i] -
                                      self.stats[block]["uu"][i, j - 1]) \
                         /   (self.stats[block]["uu"][i, j] -
                         self.stats[block]["uu"][i, j - 1]) + l_jm1
-                # Multiply by normal_w:
+                
+                # Multiply by normal_w if necessary (for purely cartesian, normal_w[1,i] is typically 1.0)
                 d99[i] = np.abs(l_j * normal_w[1, i])
             jmax[i] = j
 
@@ -350,19 +347,19 @@ class Compute2DCurv:
         logger.debug("Computing displacement thickness for block %d", block)
         #
         deltas = np.zeros(self.info[f"block {block}"]["nx"])
-        x = self.grid["x"][block]
         y = self.grid["y"][block]
 
         for i in range(self.info[f"block {block}"]["nx"]):
-            for j in range(self.stats[block]["j99"]):
+            # Note: Changed to iterate specifically over the integer value for the i-th point.
+            for j in range(int(self.stats[block]["j99"][i])):
                 # Arg 1 and arg2 for trapezoidal rule:
                 arg1    = 1 - self.stats[block]["rho"][i,j]   *self.stats[block]["uu"][i, j] \
                     / self.stats[block]["ufst"][i] / self.stats[block]["rho_fst"][i]
                 arg2    = 1 - self.stats[block]["rho"][i,j+1] *self.stats[block]["uu"][i, j + 1]\
                     / self.stats[block]["ufst"][i] / self.stats[block]["rho_fst"][i]
-                # Compute deltas using trapezoidal rule:
-                deltas[i]   =  deltas[i] + (arg1 + arg2) / 2 * ((x[i, j + 1] - x[i, j]) ** 2 \
-                                                        +  (y[i, j + 1] - y[i, j]) ** 2) ** 0.5
+                
+                # Compute deltas using trapezoidal rule (Cartesian formulation):
+                deltas[i] += (arg1 + arg2) / 2 * (y[j + 1] - y[j])
 
         return deltas
 
@@ -371,14 +368,11 @@ class Compute2DCurv:
         Computes momentum thickness at each mesh point for a given block.
         """
         theta = np.zeros(self.info[f"block {block}"]["nx"])
-
-        x = self.grid["x"][block]
         y = self.grid["y"][block]
-        #
+        
         for i in range(self.info[f"block {block}"]["nx"]):
-            # Loop through x:
-            for j in range(min(y.shape[1] - 1, int(self.stats[block]["j99"][i]) + 10)):
-                # Arg 1 and arg2 for trapezoidal rule:
+            # Loop through y (using 1D len function)
+            for j in range(min(len(y) - 1, int(self.stats[block]["j99"][i]) + 10)):
                 if self.stats[block]["ufst"][i] == 0.0:
                     logger.debug("Freestream velocity is zero for block %d in i= %d, j= %d "
                                    "setting theta to zero.", block,i, j)
@@ -391,12 +385,12 @@ class Compute2DCurv:
                         * (1 - self.stats[block]["uu"][i, j]      / self.stats[block]["ufst"][i])
                 arg2            = self.stats[block]["uu"][i, j + 1]  / self.stats[block]["ufst"][i]\
                         * (1 - self.stats[block]["uu"][i, j + 1]  / self.stats[block]["ufst"][i])
-                # Compute theta using trapezoidal rule:
-                theta[i]   += (arg1 + arg2) / 2 * ((x[i, j + 1] - x[i, j]) ** 2 \
-                                            +   (y[i, j + 1] - y[i, j]) ** 2) ** 0.5
+                
+                # Compute theta using trapezoidal rule (Cartesian formulation):
+                theta[i] += (arg1 + arg2) / 2 * (y[j + 1] - y[j])
         return theta
 
-    def _wall_normal_velocity(self, block: int, normal_w=np.ndarray):
+    def _wall_normal_velocity(self, block: int, normal_w: np.ndarray):
         """
         Computes wall normal velocity at each mesh point for a given block.
         """
@@ -427,4 +421,3 @@ class Compute2DCurv:
         if qty in self.stats[1]:
             return True
         return False
-        
